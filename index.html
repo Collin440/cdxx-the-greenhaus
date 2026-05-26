@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CDXX: The GreenHaus</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <!-- GOOGLE FONTS -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="app-layout">
+
+        <!-- LEFT SIDEBAR -->
+        <aside class="sidebar-left">
+
+            <div class="logo">
+                <h1>CDXX: The GreenHaus</h1>
+                <img src="./images/cdxx_logo.jpeg" alt="GreenHaus Logo">
+            </div>
+
+            <nav class="nav-links">
+
+                <a href="#" class="active">Home</a>
+
+                <a href="#">Explore</a>
+
+                <a href="#" class="notifications-link">
+
+                    Notifications
+
+                    <span class="notification-count">
+                     0
+                    </span>
+
+                </a>
+
+                <a href="#">Messages</a>
+
+                <a href="#">Saved</a>
+
+                <a href="#">Settings</a>
+
+            </nav>
+
+            <div class="rooms-section">
+
+                <h3>COMMUNITY ROOMS</h3>
+
+                <div class="room-card active-room" data-room="hotbox">
+                    <p>#Hot Box</p>
+                    <span class="online-count">
+                     324 online
+                    </span>
+                </div>
+
+                <div class="room-card active-room" data-room="chill">
+                    <p>#Chill Room</p>
+                    <span class="online-count">
+                     189 online
+                    </span>
+                </div>
+
+                <div class="room-card active-room" data-room="neosoul">
+                    <p>#NeoSoul Nights</p>
+                    <span class="online-count">
+                     96 online
+                    </span>
+                </div>
+
+            </div>
+
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-feed">
+
+            <!-- TOP NAV -->
+            <header class="top-nav">
+
+                <button class="menu-toggle">
+                 ☰
+                </button>
+
+                <input
+                    type="text"
+                    id="search-input"
+                    placeholder="Search posts, rooms, users..."
+                >
+
+                <button>Post Something</button>
+
+            </header>
+
+            <div class="create-post">
+
+    <textarea
+        id="post-input"
+        placeholder="Hey Gardener!! What's the vibe today? 🍃">
+    </textarea>
+
+    <input
+    type="file"
+    id="image-upload"
+    accept="image/*"
+    title="Upload an image"
+>
+
+    <input
+    type="file"
+    id="video-upload"
+    accept="video/*"
+    title="Upload a video"
+>
+
+    <button id="post-btn">
+        Post Vibes
+    </button>
+
+            </div>
+
+            <!-- FEED -->
+            <section class="feed-container">
+
+            </section>
+
+        </main>
+
+        <!-- RIGHT SIDEBAR -->
+        <aside class="sidebar-right">
+
+            <div class="mood-card">
+
+                <h3>Mood: High Vibes</h3>
+
+                <p>
+                    Lo-fi beats. Rainy nights.
+                    Good smoke. Better conversations.
+                </p>
+
+                <div class="theme-buttons">
+
+    <button data-theme="green">
+        Midnight Green
+    </button>
+
+    <button data-theme="purple">
+        NeoSoul Purple
+    </button>
+
+    <button data-theme="autumn">
+        Autumn Smoke
+    </button>
+
+    <button data-theme="rain">
+        LoFi Rain
+    </button>
+
+</div>
+
+            </div>
+
+            <!-- PROFILE DROPDOWN -->
+
+<div class="profile-dropdown-wrapper">
+
+    <div class="profile-trigger">
+
+        <img
+            src="./images/mask_neon_anonymous.jpg"
+            alt="Profile"
+        >
+
+        <div>
+
+            <h4>CollinBeatz</h4>
+
+            <span>Online 🌿</span>
+
+        </div>
+
+    </div>
+
+    <div class="profile-dropdown">
+
+        <button>
+            👤 Profile
+        </button>
+
+        <button>
+            ⚙ Settings
+        </button>
+
+        <button>
+            🎵 Playlist Mode
+        </button>
+
+        <button class="logout-btn">
+            🚪 Logout
+        </button>
+
+    </div>
+
+</div>
+
+            <!-- TRENDING SECTION -->
+
+<div class="trending-card">
+
+    <h3>TRENDING IN THE GREENHAUS 🌿</h3>
+
+    <div class="trending-list">
+
+    </div>
+
+</div>
+
+<div class="music-player">
+
+    <img
+        src="./images/red_parking.webp"
+        alt="Album Cover"
+        class="album-cover"
+    >
+
+    <div class="track-info">
+
+        <h4>Midnight Rain</h4>
+
+        <p>NeoSoul.wav</p>
+
+    </div>
+
+    <audio id="lofi-audio" loop>
+
+        <source
+    src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
+    type="audio/mp3"
+>
+
+    </audio>
+
+<button id="play-btn">
+
+    <span class="play-icon">
+        ▶
+    </span>
+
+    <span class="play-text">
+        Play Vibes
+    </span>
+
+</button>
+
+</div>
+
+            <div class="friends-card">
+
+                <h3>ACTIVE FRIENDS</h3>
+
+                <div class="friend">
+                    <p>Lolly</p>
+                    <span>online</span>
+                </div>
+
+                <div class="friend">
+                    <p>MDD</p>
+                    <span>listening to LoFi</span>
+                </div>
+
+                <div class="friend">
+                    <p>Nfana</p>
+                    <span>in Chill Room</span>
+                </div>
+
+            </div>
+
+        </aside>
+
+    </div>
+
+    <div class="chat-room-card">
+
+    <h3 id="live-room-title">
+    🌿 #Hot Box
+    </h3>
+
+    <p id="room-status">
+    Late-night chaos and smoke sessions.
+    </p>
+
+    <div class="chat-messages">
+
+        <div class="chat-message">
+            <strong>CloudWalker:</strong>
+            Passing the aux 🌧️
+        </div>
+
+        <div class="chat-message">
+            <strong>LoFiSoul:</strong>
+            This beat is floating rn
+        </div>
+
+    </div>
+
+    <div class="chat-input-area">
+
+        <input
+            type="text"
+            id="chat-input"
+            placeholder="Drop a message..."
+        >
+
+        <button id="send-chat">
+            Send
+        </button>
+
+    </div>
+
+</div>
+
+    <!-- COMMENTS MODAL -->
+
+<div class="comments-modal">
+
+    <div class="modal-content">
+
+        <div class="modal-header">
+
+            <h2>Comments</h2>
+
+            <button class="close-modal">
+                ✕
+            </button>
+
+        </div>
+
+        <div class="comments-container">
+
+</div>
+
+<div class="add-comment">
+
+    <textarea
+        id="comment-input"
+        placeholder="Drop your thoughts... 🌿"
+    ></textarea>
+
+    <button id="submit-comment">
+        Post Comment
+    </button>
+
+</div>
+            <div class="comment">
+
+                <h4>LoFiSoul</h4>
+
+                <p>
+                    Need the playlist ASAP 🎵
+                </p>
+
+            </div>
+
+            <div class="comment">
+
+                <h4>CloudWalker</h4>
+
+                <p>
+                    Late-night GreenHaus energy hits different.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- TOAST NOTIFICATION -->
+
+<div class="toast">
+
+    <p id="toast-message">
+        Notification
+    </p>
+
+</div>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
