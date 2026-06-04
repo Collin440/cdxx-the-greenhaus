@@ -1,0 +1,321 @@
+.explore-page {
+  width: 100%;
+}
+
+.explore-header h1 {
+  color: #63ffb4;
+
+  font-size: 2.5rem;
+
+  margin-bottom: 10px;
+}
+
+.explore-header p {
+  color: #9ed8bb;
+
+  margin-bottom: 30px;
+}
+
+.explore-filters {
+  display: flex;
+
+  gap: 14px;
+
+  margin-bottom: 30px;
+
+  flex-wrap: wrap;
+}
+
+.explore-filters button {
+  background: rgba(0, 255, 140, 0.08);
+
+  border: 1px solid rgba(0, 255, 140, 0.15);
+
+  color: #dffff0;
+
+  padding: 12px 18px;
+
+  border-radius: 999px;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.explore-filters button:hover {
+  background: rgba(0, 255, 140, 0.18);
+}
+
+.explore-layout {
+  display: grid;
+
+  grid-template-columns: 380px 1fr;
+
+  gap: 24px;
+}
+
+.venues-list {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 20px;
+}
+
+.venue-card {
+  background: rgba(0, 255, 140, 0.05);
+
+  border: 1px solid rgba(0, 255, 140, 0.08);
+
+  border-radius: 20px;
+
+  padding: 20px;
+
+  transition: 0.2s ease;
+}
+
+.venue-card:hover {
+  transform: translateY(-3px);
+
+  border-color: rgba(99, 255, 180, 0.25);
+}
+
+.venue-card h3 {
+  color: #63ffb4;
+
+  margin-bottom: 8px;
+}
+
+.venue-card p {
+  color: #c7e7d5;
+}
+
+.map-container {
+  min-height: 700px;
+}
+
+.fake-map {
+  width: 100%;
+
+  height: 700px;
+
+  border-radius: 24px;
+
+  background: linear-gradient(
+    135deg,
+    rgba(0, 255, 140, 0.08),
+    rgba(0, 0, 0, 0.4)
+  );
+
+  border: 1px solid rgba(0, 255, 140, 0.08);
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  color: #63ffb4;
+
+  font-size: 1.2rem;
+}
+
+.active-filter {
+  background: #63ffb4 !important;
+
+  color: #04130c !important;
+
+  border-color: #63ffb4 !important;
+
+  box-shadow:
+    0 0 20px rgba(99, 255, 180, 0.35);
+}
+
+.add-venue-form {
+  display: flex;
+  flex-direction: column;
+
+  gap: 14px;
+
+  padding: 24px;
+
+  background: rgba(10, 35, 20, 0.9);
+
+  border: 1px solid rgba(82, 255, 168, 0.15);
+
+  border-radius: 24px;
+
+
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+
+  margin-bottom: 24px;
+}
+
+.add-venue-form input,
+.add-venue-form select {
+  width: 100%;
+
+  padding: 14px 16px;
+
+  border-radius: 14px;
+
+  border: 1px solid rgba(82, 255, 168, 0.15);
+
+  background: rgba(0, 0, 0, 0.3);
+
+  color: white;
+
+  font-size: 0.95rem;
+
+  outline: none;
+
+  transition: 0.2s ease;
+}
+
+.add-venue-form input:focus,
+.add-venue-form select:focus {
+  border-color: #52ffa8;
+
+  box-shadow: 0 0 12px rgba(82, 255, 168, 0.2);
+}
+
+.add-venue-form button {
+  padding: 14px;
+
+  border: none;
+
+  border-radius: 14px;
+
+  background: linear-gradient(
+    135deg,
+    #52ffa8,
+    #00c853
+  );
+
+  color: black;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.add-venue-form button:hover {
+  transform: translateY(-2px);
+
+  box-shadow: 0 8px 20px rgba(82, 255, 168, 0.3);
+}
+
+.map-popup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.map-popup strong {
+  font-size: 1rem;
+  color: white;
+}
+
+.map-popup p {
+  color: #d1d5db;
+  font-size: 0.9rem;
+}
+
+.map-popup span {
+  color: #4ade80;
+  font-size: 0.85rem;
+}
+
+.directions-btn {
+  background: #22c55e;
+  color: black;
+  text-decoration: none;
+  padding: 0.7rem 1rem;
+  border-radius: 12px;
+  font-weight: 600;
+  text-align: center;
+  transition: 0.3s;
+}
+
+.directions-btn:hover {
+  background: #16a34a;
+}
+
+.explore-search {
+  margin-bottom: 1.5rem;
+}
+
+.explore-search input {
+  width: 100%;
+  padding: 1rem;
+  border: none;
+  border-radius: 18px;
+  background: rgba(255,255,255,0.06);
+  color: white;
+  font-size: 1rem;
+  outline: none;
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+
+.explore-search input::placeholder {
+  color: rgba(255,255,255,0.5);
+}
+
+.venue-image {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 18px;
+  margin-bottom: 1rem;
+}
+
+.hidden-file-input {
+  display: none;
+}
+
+.custom-file-upload {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  padding: 14px;
+
+  border-radius: 14px;
+
+  background: #06291d;
+
+  border: 1px solid #0d5c43;
+
+  color: #7dffb3;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.3s ease;
+}
+
+.custom-file-upload:hover {
+  background: #0d5c43;
+
+  transform: translateY(-2px);
+}
+
+.image-preview {
+  width: 100%;
+
+  height: 220px;
+
+  object-fit: cover;
+
+  border-radius: 18px;
+
+  margin-top: 14px;
+
+  border: 1px solid #0d5c43;
+}

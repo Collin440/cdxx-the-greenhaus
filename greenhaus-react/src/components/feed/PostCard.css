@@ -1,0 +1,91 @@
+.post-card {
+  background: #0b2118;
+  border: 1px solid #153c2c;
+  border-radius: 24px;
+  padding: 1.2rem;
+  margin-bottom: 2rem;
+}
+
+.post-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.post-header img {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.post-header h3 {
+  color: #67ffb3;
+}
+
+.post-header span {
+  color: #86a494;
+  font-size: 14px;
+}
+
+.post-text {
+  margin-bottom: 1rem;
+  color: #d8e6dd;
+  line-height: 1.6;
+}
+
+.post-image {
+  width: 100%;
+  border-radius: 18px;
+  margin-bottom: 1rem;
+  max-height: 500px;
+  object-fit: cover;
+}
+
+.post-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.post-actions button {
+  background: #123526;
+  border: none;
+  color: white;
+  padding: 0.8rem 1rem;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.post-actions button:hover {
+  background: #1a4d38;
+}
+
+.post-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.post-actions button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  background: rgba(255,255,255,0.05);
+  border: none;
+
+  padding: 0.8rem 1rem;
+  border-radius: 12px;
+
+  color: #d8ffe7;
+  cursor: pointer;
+
+  transition: 0.3s ease;
+}
+
+.post-actions button:hover {
+  background: rgba(76, 255, 140, 0.15);
+  transform: translateY(-2px);
+}

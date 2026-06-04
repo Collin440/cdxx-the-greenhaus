@@ -1,0 +1,115 @@
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Popup,
+  useMap
+} from "react-leaflet";
+
+import "leaflet/dist/leaflet.css";
+
+function FlyToVenue({ venue }) {
+
+  const map = useMap();
+
+  if (venue) {
+
+    map.flyTo(
+      [venue.lat, venue.lng],
+      15,
+      {
+        duration: 2
+      }
+    );
+
+  }
+
+  return null;
+}
+
+function ExploreMap({
+  venues,
+  selectedVenue,
+  userLocation,
+}) {
+
+  return (
+
+    <MapContainer
+  center={
+    userLocation
+      ? [userLocation.lat, userLocation.lng]
+      : [-26.2041, 28.0473]
+  }
+      zoom={12}
+      style={{
+        width: "100%",
+        height: "700px",
+        borderRadius: "24px",
+      }}
+    >
+
+      <TileLayer
+        attribution='&copy; OpenStreetMap contributors'
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      />
+
+      <FlyToVenue venue={selectedVenue} />
+
+      {userLocation && (
+
+  <Marker
+    position={[
+      userLocation.lat,
+      userLocation.lng
+    ]}
+  >
+
+    <Popup>
+      You are here 📍
+    </Popup>
+
+  </Marker>
+
+)}
+
+      {venues.map((venue) => (
+
+        <Marker
+          key={venue.id}
+          position={[venue.lat, venue.lng]}
+        >
+
+          <Popup>
+
+  <div className="map-popup">
+
+    <strong>{venue.name}</strong>
+
+    <p>{venue.location}</p>
+
+    <span>{venue.category}</span>
+
+    <a
+      href={`https://www.google.com/maps/search/?api=1&query=${venue.lat},${venue.lng}`}
+      target="_blank"
+      rel="noreferrer"
+      className="directions-btn"
+    >
+      Open in Maps
+    </a>
+
+  </div>
+
+</Popup>
+
+        </Marker>
+
+      ))}
+
+    </MapContainer>
+
+  );
+}
+
+export default ExploreMap;

@@ -1,0 +1,35 @@
+.right-sidebar {
+  width: 320px;
+
+  min-height: 100vh;
+
+  padding: 30px 20px;
+
+  background: #031b14;
+
+  border-left: 1px solid rgba(0, 255, 140, 0.08);
+}
+
+.widget {
+  background: rgba(0, 255, 140, 0.05);
+
+  border: 1px solid rgba(0, 255, 140, 0.08);
+
+  border-radius: 20px;
+
+  padding: 20px;
+
+  margin-bottom: 24px;
+}
+
+.widget h3 {
+  color: #63ffb4;
+
+  margin-bottom: 16px;
+}
+
+.widget p {
+  margin-bottom: 10px;
+
+  color: #d7ffe8;
+}
