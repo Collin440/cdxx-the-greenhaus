@@ -92,8 +92,6 @@
                     placeholder="Search posts, rooms, users..."
                 >
 
-                <button>Post Something</button>
-
             </header>
 
             <div class="create-post">
@@ -131,38 +129,50 @@
         </main>
 
         <!-- RIGHT SIDEBAR -->
-        <aside class="sidebar-right">
+<aside class="sidebar-right">
 
-            <div class="mood-card">
+    <div class="mood-card">
 
-                <h3>Mood: High Vibes</h3>
+        <h3>MOODS 🌿</h3>
+
+        <div class="mood-slider">
+
+            <div
+                class="mood-slide active-mood"
+                data-theme="autumn"
+            >
+                <h4>🍂 Autumn Smoke</h4>
 
                 <p>
-                    Lo-fi beats. Rainy nights.
-                    Good smoke. Better conversations.
+                    Warm tones & rooftop energy
                 </p>
-
-                <div class="theme-buttons">
-
-    <button data-theme="green">
-        Midnight Green
-    </button>
-
-    <button data-theme="purple">
-        NeoSoul Purple
-    </button>
-
-    <button data-theme="autumn">
-        Autumn Smoke
-    </button>
-
-    <button data-theme="rain">
-        LoFi Rain
-    </button>
-
-</div>
-
             </div>
+
+            <div
+                class="mood-slide"
+                data-theme="rain"
+            >
+                <h4>🌧 LoFi Rain</h4>
+
+                <p>
+                    Rain ambience & calm chats
+                </p>
+            </div>
+
+            <div
+                class="mood-slide"
+                data-theme="purple"
+            >
+                <h4>🎵 NeoSoul Purple</h4>
+
+                <p>
+                    Smooth synths & smoke sessions
+                </p>
+            </div>
+
+        </div>
+
+    </div>
 
             <!-- PROFILE DROPDOWN -->
 
@@ -255,6 +265,55 @@
     </span>
 
 </button>
+
+</div>
+
+<div class="gig-guide-card">
+
+    <h3>🔥 CDXX LIVE</h3>
+
+    <div class="gig-upload-form">
+
+    <input
+        type="text"
+        id="gig-title"
+        placeholder="Event title"
+    >
+
+    <input
+        type="text"
+        id="gig-venue"
+        placeholder="Venue"
+    >
+
+    <input
+        type="text"
+        id="gig-date"
+        placeholder="Date & Time"
+    >
+
+    <input
+        type="url"
+        id="gig-link"
+        placeholder="Ticket link"
+    >
+
+    <input
+        type="file"
+        id="gig-media"
+        accept="image/*,video/*"
+        title="Upload event media"
+    >
+
+    <button id="post-gig-btn">
+        Post Gig
+    </button>
+
+</div>
+
+    <div class="gig-list">
+
+    </div>
 
 </div>
 
@@ -391,7 +450,60 @@
 
 </div>
 
-    <script src="script.js"></script>
+    <div class="auth-container" id="auth-container">
+
+    <form id="signup-form" class="auth-form">
+
+        <h2>Create Account</h2>
+
+        <input
+            type="email"
+            id="signup-email"
+            placeholder="Email"
+            required
+        />
+
+        <input
+            type="password"
+            id="signup-password"
+            placeholder="Password"
+            required
+        />
+
+        <button type="submit">
+            Sign Up
+        </button>
+
+    </form>
+
+    <form id="login-form" class="auth-form">
+
+        <h2>Login</h2>
+
+        <input
+            type="email"
+            id="login-email"
+            placeholder="Email"
+            required
+        />
+
+        <input
+            type="password"
+            id="login-password"
+            placeholder="Password"
+            required
+        />
+
+        <button type="submit">
+            Login
+        </button>
+
+    </form>
+
+</div>
+
+    <script type="module" src="script.js"></script>
+    <script type="module" src="gigGuide.js"></script>
 
 </body>
 </html>

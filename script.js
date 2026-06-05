@@ -1,3 +1,109 @@
+import { supabase } from "./supabase/client.js";
+
+const signupForm = document.querySelector("#signup-form");
+const loginForm = document.querySelector("#login-form");
+const logoutBtn = document.querySelector(".logout-btn");
+
+async function signUpUser(email, password) {
+    const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+    });
+
+    if (error) {
+        console.error("Signup error:", error.message);
+        updateNotifications(error.message);
+        return;
+    }
+
+    console.log("User signed up:", data);
+
+document.body.classList.add("logged-in");
+
+const authContainer =
+    document.querySelector("#auth-container");
+
+authContainer.style.display = "none";
+}
+
+async function loginUser(email, password) {
+    const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+    });
+
+    if (error) {
+        console.error("Login error:", error.message);
+        alert(error.message);
+        return;
+    }
+
+    updateNotifications(
+    "Welcome back to CDXX 🌿"
+);
+
+document.body.classList.add("logged-in");
+
+const authContainer =
+    document.querySelector("#auth-container");
+
+authContainer.style.display = "none";
+}
+
+logoutBtn?.addEventListener("click", logoutUser);
+
+async function checkUser() {
+    const {
+        data: { user },
+    } = await supabase.auth.getUser();
+
+    const authContainer = document.querySelector("#auth-container");
+
+if (user) {
+    console.log("Current user:", user);
+
+    document.body.classList.add("logged-in");
+
+    authContainer.style.display = "none";
+
+} else {
+    console.log("No active user");
+
+    authContainer.style.display = "flex";
+}}
+
+checkUser();
+
+async function logoutUser() {
+    const { error } = await supabase.auth.signOut();
+
+    if (error) {
+        console.error(error.message);
+        return;
+    }
+
+    updateNotifications("Logged out successfully 🌙");
+    location.reload();
+}
+
+signupForm?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const email = document.querySelector("#signup-email").value;
+    const password = document.querySelector("#signup-password").value;
+
+    await signUpUser(email, password);
+});
+
+loginForm?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const email = document.querySelector("#login-email").value;
+    const password = document.querySelector("#login-password").value;
+
+    await loginUser(email, password);
+});
+
 /* ========================================= */
 /* NAVIGATION ACTIVE STATE */
 /* ========================================= */
@@ -346,7 +452,7 @@ const videoUpload = document.querySelector('#video-upload');
 
 /* VIDEO UPLOAD SYSTEM */
 
-videoUpload.addEventListener('change', () => {
+videoUpload?.addEventListener('change', () => {
 
     const file = videoUpload.files[0];
 
@@ -368,7 +474,7 @@ videoUpload.addEventListener('change', () => {
 
 /* IMAGE UPLOAD SYSTEM */
 
-imageUpload.addEventListener('change', () => {
+imageUpload?.addEventListener('change', () => {
 
     const file = imageUpload.files[0];
 
@@ -390,7 +496,7 @@ imageUpload.addEventListener('change', () => {
 
 const postButton = document.querySelector('#post-btn');
 
-postButton.addEventListener('click', () => {
+postButton?.addEventListener('click', () => {
 
     const postInput = document.querySelector('#post-input');
 
@@ -454,7 +560,7 @@ const menuToggle = document.querySelector('.menu-toggle');
 
 const sidebar = document.querySelector('.sidebar-left');
 
-menuToggle.addEventListener('click', () => {
+menuToggle?.addEventListener('click', () => {
 
     sidebar.classList.toggle('active');
 
@@ -464,11 +570,20 @@ menuToggle.addEventListener('click', () => {
 /* THEME SYSTEM */
 /* ========================================= */
 
-const themeButtons = document.querySelectorAll('.theme-buttons button');
+const themeButtons =
+    document.querySelectorAll('.mood-slide');
 
 themeButtons.forEach(button => {
 
     button.addEventListener('click', () => {
+
+        themeButtons.forEach(card => {
+
+    card.classList.remove('active-mood');
+
+});
+
+button.classList.add('active-mood');
 
         const theme = button.dataset.theme;
 
@@ -518,7 +633,7 @@ themeButtons.forEach(button => {
 
 const searchInput = document.querySelector('#search-input');
 
-searchInput.addEventListener('input', () => {
+searchInput?.addEventListener('input', () => {
 
     const searchTerm = searchInput.value.toLowerCase();
 
@@ -707,11 +822,14 @@ document.addEventListener('click', (event) => {
         '.profile-dropdown-wrapper'
     );
 
-    if (!dropdownWrapper.contains(event.target)) {
+    if (
+    dropdownWrapper &&
+    !dropdownWrapper.contains(event.target)
+) {
 
-        profileDropdown.classList.remove('active');
+    profileDropdown.classList.remove('active');
 
-    }
+}
 
 });
 
@@ -1369,4 +1487,199 @@ function simulateRoomActivity() {
 /* RANDOM ROOM ACTIVITY */
 
 setInterval(simulateRoomActivity, 8000);
+
+async function testConnection() {
+
+    const { data, error } =
+        await supabase.auth.getSession();
+
+    if (error) {
+
+        console.error(
+            'Supabase connection failed:',
+            error
+        );
+
+    } else {
+
+        console.log(
+            'Supabase connected successfully 🌿'
+        );
+
+    }
+
+}
+
+testConnection();
+
+supabase.auth.onAuthStateChange((event, session) => {
+
+    if (session) {
+
+        document.body.classList.add("logged-in");
+
+        console.log("User logged in");
+
+    } else {
+
+        document.body.classList.remove("logged-in");
+
+        console.log("User logged out");
+    }
+
+});
+
+/* ========================================= */
+/* GIG GUIDE SYSTEM */
+/* ========================================= */
+
+const postGigBtn =
+    document.querySelector("#post-gig-btn");
+
+const gigList =
+    document.querySelector(".gig-list");
+
+const gigMediaInput =
+    document.querySelector("#gig-media");
+
+let gigs = JSON.parse(
+    localStorage.getItem("greenhausGigs")
+) || [];
+
+let uploadedGigMedia = "";
+
+/* HANDLE MEDIA UPLOAD */
+
+gigMediaInput.addEventListener("change", () => {
+
+    const file = gigMediaInput.files[0];
+
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = function(event) {
+
+        uploadedGigMedia =
+            event.target.result;
+
+    };
+
+    reader.readAsDataURL(file);
+
+});
+
+/* RENDER GIGS */
+
+function renderGigs() {
+
+    gigList.innerHTML = "";
+
+    gigs.forEach(gig => {
+
+        gigList.innerHTML += `
+
+            <div class="gig-item">
+
+                <h4>${gig.title}</h4>
+
+                <p>📍 ${gig.venue}</p>
+
+                <p>🗓 ${gig.date}</p>
+
+                ${
+                    gig.ticketLink
+                    ?
+                    `
+                    <a
+                        href="${gig.ticketLink}"
+                        target="_blank"
+                        class="gig-ticket-link"
+                    >
+                        🎟 Buy Tickets
+                    </a>
+                    `
+                    :
+                    ""
+                }
+
+                ${
+    gig.media?.startsWith("data:video")
+
+    ?
+
+    `
+    <video
+        src="${gig.media}"
+        controls
+        class="gig-media"
+    ></video>
+    `
+
+    :
+
+    `
+    <img
+        src="${gig.media}"
+        class="gig-media"
+    >
+    `
+}
+
+            </div>
+
+        `;
+
+    });
+
+}
+
+/* POST GIG */
+
+postGigBtn.addEventListener("click", () => {
+
+    const title =
+        document.querySelector("#gig-title").value;
+
+    const venue =
+        document.querySelector("#gig-venue").value;
+
+    const date =
+        document.querySelector("#gig-date").value;
+
+    const ticketLink =
+        document.querySelector("#gig-link").value;
+
+    if (
+        title.trim() === "" ||
+        venue.trim() === "" ||
+        date.trim() === ""
+    ) {
+        return;
+    }
+
+    const newGig = {
+
+        title,
+        venue,
+        date,
+        ticketLink,
+        media: uploadedGigMedia
+
+    };
+
+    gigs.unshift(newGig);
+
+    localStorage.setItem(
+        "greenhausGigs",
+        JSON.stringify(gigs)
+    );
+
+    renderGigs();
+
+});
+
+/* INITIAL LOAD */
+
+renderGigs();
 
