@@ -1,18 +1,15 @@
 .feed-page {
-
   display: flex;
 
   flex-direction: column;
 
   gap: 2rem;
-
 }
 
 .create-post {
+  background: rgba(255, 255, 255, 0.04);
 
-  background: rgba(255,255,255,0.04);
-
-  border: 1px solid rgba(255,255,255,0.08);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 
   border-radius: 20px;
 
@@ -23,11 +20,9 @@
   flex-direction: column;
 
   gap: 1rem;
-
 }
 
 .create-post textarea {
-
   width: 100%;
 
   min-height: 120px;
@@ -45,18 +40,12 @@
   resize: none;
 
   font-size: 1rem;
-
 }
 
 .create-post button {
-
   align-self: flex-end;
 
-  background: linear-gradient(
-    90deg,
-    #32ff7e,
-    #00c853
-  );
+  background: linear-gradient(90deg, #32ff7e, #00c853);
 
   border: none;
 
@@ -67,19 +56,16 @@
   font-weight: bold;
 
   cursor: pointer;
-
 }
 
 .post-card {
-
-  background: rgba(255,255,255,0.04);
+  background: rgba(255, 255, 255, 0.04);
 
   border-radius: 20px;
 
   padding: 1.5rem;
 
-  border: 1px solid rgba(255,255,255,0.06);
-
+  border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .feed-posts {
@@ -128,3 +114,119 @@
   margin-top: 15px;
 }
 
+/* =========================
+   LIKE BUTTON
+========================= */
+
+.post-actions {
+  margin-top: 16px;
+}
+
+.like-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 8px 16px;
+
+  border: 1px solid rgba(0, 255, 170, 0.25);
+  border-radius: 999px;
+
+  background: rgba(255, 255, 255, 0.04);
+
+  color: #b7c5bf;
+
+  cursor: pointer;
+
+  transition: all 0.25s ease;
+
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.like-button svg {
+  transition: all 0.25s ease;
+}
+
+.like-button:hover {
+  background: rgba(0, 255, 170, 0.12);
+
+  border-color: #27ff8a;
+
+  color: #27ff8a;
+
+  transform: translateY(-2px);
+}
+
+.like-button:hover svg {
+  transform: scale(1.15);
+}
+
+.like-button.liked {
+  background: rgba(39, 255, 138, 0.15);
+
+  color: #27ff8a;
+
+  border-color: #27ff8a;
+
+  box-shadow: 0 0 12px rgba(39, 255, 138, 0.25);
+}
+
+.like-button.liked:hover {
+  box-shadow: 0 0 18px rgba(39, 255, 138, 0.45);
+}
+
+.like-button:active {
+  transform: scale(0.96);
+}
+
+/* =========================
+   POST ACTION BUTTONS
+========================= */
+
+.post-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.action-button {
+  width: 40px;
+  height: 40px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  border-radius: 50%;
+
+  background: transparent;
+
+  color: #8ea59b;
+
+  cursor: pointer;
+
+  transition: all 0.25s ease;
+}
+
+.action-button:hover {
+  background: rgba(39, 255, 138, 0.1);
+
+  color: #27ff8a;
+
+  transform: translateY(-2px);
+}
+
+.action-button:active {
+  transform: scale(0.92);
+}
+
+.action-button svg {
+  transition: transform 0.25s ease;
+}
+
+.action-button:hover svg {
+  transform: scale(1.15);
+}

@@ -28,25 +28,36 @@ function Sidebar() {
   const navigate = useNavigate();
   const [profile, setProfile] = useState(null);
 
-  async function getProfile() {
-    if (!user) return;
+  useEffect(() => {
+    let mounted = true;
 
-    const { data, error } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("id", user.id)
-      .single();
+    async function fetchProfile() {
+      if (!user) {
+        setProfile(null);
+        return;
+      }
 
-    if (error) {
-      console.error(error);
-      return;
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", user.id)
+        .single();
+
+      if (error) {
+        console.error(error);
+        return;
+      }
+
+      if (mounted) {
+        setProfile(data);
+      }
     }
 
-    setProfile(data);
-  }
+    fetchProfile();
 
-  useEffect(() => {
-    getProfile();
+    return () => {
+      mounted = false;
+    };
   }, [user]);
 
   async function handleLogout() {
@@ -92,7 +103,7 @@ function Sidebar() {
 
         <NavLink to="/app/feed" className="post-link">
           <FaPlusCircle />
-          <span>Post Something</span>
+          <span>Spark Up!</span>
         </NavLink>
 
         <NavLink to="/app">

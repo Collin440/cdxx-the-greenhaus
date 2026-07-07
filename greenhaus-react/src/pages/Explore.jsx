@@ -1,189 +1,150 @@
 import "./Explore.css";
 import ExploreMap from "./ExploreMap";
 import { useEffect, useState } from "react";
-
 import {
-  fetchVenues,
-  addVenue,
-  uploadVenueImage
-} from "../lib/venues";
+  Plus,
+  MapPin,
+  Image,
+  Building2,
+  Compass,
+  Music4,
+  Store,
+  UtensilsCrossed,
+  Trees,
+  GalleryHorizontal,
+} from "lucide-react";
+
+import { fetchVenues, addVenue, uploadVenueImage } from "../lib/venues";
 
 function Explore() {
-
   const [selectedCategory, setSelectedCategory] = useState("All");
 
-const [selectedVenue, setSelectedVenue] = useState(null);
+  const [selectedVenue, setSelectedVenue] = useState(null);
 
-const [venues, setVenues] = useState([]);
+  const [showAddVenueModal, setShowAddVenueModal] = useState(false);
 
-const [userLocation, setUserLocation] = useState(null);
+  const [venues, setVenues] = useState([]);
 
-const [searchTerm, setSearchTerm] = useState("");
+  const [userLocation, setUserLocation] = useState(null);
 
-const [imagePreview, setImagePreview] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
 
-/* LOAD VENUES */
+  const [venueName, setVenueName] = useState("");
+  const [venueLocation, setVenueLocation] = useState("");
+  const [venueLat, setVenueLat] = useState("");
+  const [venueLng, setVenueLng] = useState("");
+  const [venueCategory, setVenueCategory] = useState("Music");
+  const [venueImage, setVenueImage] = useState(null);
 
-useEffect(() => {
+  const [imagePreview, setImagePreview] = useState("");
 
-  async function loadVenues() {
+  /* LOAD VENUES */
 
-    const data =
-      await fetchVenues();
+  useEffect(() => {
+    async function loadVenues() {
+      const data = await fetchVenues();
 
-    setVenues(data);
-
-  }
-
-  loadVenues();
-
-}, []);
-
-/* GET USER LOCATION */
-
-useEffect(() => {
-
-  navigator.geolocation.getCurrentPosition(
-
-    (position) => {
-
-      setUserLocation({
-        lat: position.coords.latitude,
-        lng: position.coords.longitude,
-      });
-
-    },
-
-    (error) => {
-
-      console.error(
-        "Location access denied:",
-        error
-      );
-
+      setVenues(data);
     }
 
-  );
+    loadVenues();
+  }, []);
 
-}, []);
+  /* GET USER LOCATION */
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setUserLocation({
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        });
+      },
+
+      (error) => {
+        console.error("Location access denied:", error);
+      },
+    );
+  }, []);
 
   async function handleAddVenue() {
+    console.log("Button clicked");
+    const name = venueName.trim();
 
-  const name =
-    document.querySelector("#venue-name").value;
+    const location = venueLocation.trim();
 
-  const location =
-    document.querySelector("#venue-location").value;
+    const lat = Number(venueLat);
 
-  const lat =
-    Number(
-      document.querySelector("#venue-lat").value
-    );
+    const lng = Number(venueLng);
 
-  const lng =
-    Number(
-      document.querySelector("#venue-lng").value
-    );
+    const category = venueCategory;
 
-  const category =
-    document.querySelector("#venue-category").value;
+    const imageFile = venueImage;
 
-  const imageFile =
-  document.querySelector("#venue-image")
-    .files[0];  
+    let imageUrl = "";
 
-  let imageUrl = "";
+    if (imageFile) {
+      imageUrl = await uploadVenueImage(imageFile);
 
-if (imageFile) {
+      if (!imageUrl) {
+        alert("Image upload failed.");
+        return;
+      }
+    }
 
-  imageUrl =
-    await uploadVenueImage(imageFile);
+    if (imageFile) {
+      imageUrl = await uploadVenueImage(imageFile);
 
-}  
+      if (!imageUrl) {
+        alert("Image upload failed.");
+        return;
+      }
+    }
 
-  const newVenue = {
+    const newVenue = {
+      name,
 
-    id: Date.now(),
+      location,
 
-    name,
+      category,
 
-    location,
+      lat,
 
-    category,
+      lng,
 
-    lat,
+      description: "User submitted venue.",
 
-    lng,
+      image_url: imageUrl,
+    };
 
-    description:
-      "User submitted venue.",
+    const savedVenue = await addVenue(newVenue);
 
-    image_url: imageUrl,  
+    console.log("Saved venue:", savedVenue);
 
-  };
+    if (!savedVenue) return;
 
-  async function saveVenue() {
+    setVenues((prev) => [...prev, savedVenue]);
 
-  const savedVenue =
-    await addVenue(newVenue);
-
-  if (savedVenue) {
-
-    setVenues((prev) => [
-      ...prev,
-      savedVenue
-    ]);
-
+    setVenueName("");
+    setVenueLocation("");
+    setVenueLat("");
+    setVenueLng("");
+    setVenueCategory("Music");
+    setVenueImage(null);
+    setImagePreview("");
   }
 
-}
-
-saveVenue();
-
-}
-  
-  const filteredVenues = venues.filter(
-  (venue) => {
-
+  const filteredVenues = venues.filter((venue) => {
     const matchesCategory =
-
-      selectedCategory === "All"
-
-      ||
-
-      venue.category === selectedCategory;
+      selectedCategory === "All" || venue.category === selectedCategory;
 
     const matchesSearch =
+      venue.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      venue.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      venue.category.toLowerCase().includes(searchTerm.toLowerCase());
 
-      venue.name
-        .toLowerCase()
-        .includes(
-          searchTerm.toLowerCase()
-        )
-
-      ||
-
-      venue.location
-        .toLowerCase()
-        .includes(
-          searchTerm.toLowerCase()
-        )
-
-      ||
-
-      venue.category
-        .toLowerCase()
-        .includes(
-          searchTerm.toLowerCase()
-        );
-
-    return (
-      matchesCategory &&
-      matchesSearch
-    );
-
-  }
-);
+    return matchesCategory && matchesSearch;
+  });
 
   return (
     <div className="explore-page">
@@ -196,219 +157,247 @@ saveVenue();
       </div>
 
       <div className="explore-search">
-
-  <input
-    type="text"
-    placeholder="Search venues, cities, vibes..."
-    value={searchTerm}
-    onChange={(e) =>
-      setSearchTerm(e.target.value)
-    }
-  />
-
-</div>
+        <input
+          type="text"
+          placeholder="Search venues, cities, vibes..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </div>
 
       <div className="explore-filters">
+        <button
+          className={selectedCategory === "All" ? "active-filter" : ""}
+          onClick={() => setSelectedCategory("All")}
+        >
+          All
+        </button>
 
-  <button
-  className={
-    selectedCategory === "All"
-      ? "active-filter"
-      : ""
-  }
-  onClick={() => setSelectedCategory("All")}
->
-  All
-  </button>
+        <button
+          className={selectedCategory === "Dispensary" ? "active-filter" : ""}
+          onClick={() => setSelectedCategory("Dispensary")}
+        >
+          Dispensaries
+        </button>
 
-  <button
-  className={
-    selectedCategory === "Dispensary"
-      ? "active-filter"
-      : ""
-  }
-  onClick={() => setSelectedCategory("Dispensary")}
->
-    Dispensaries
-  </button>
+        <button
+          className={selectedCategory === "Restaurant" ? "active-filter" : ""}
+          onClick={() => setSelectedCategory("Restaurant")}
+        >
+          Restaurants
+        </button>
 
-  <button
-  className={
-    selectedCategory === "Restaurant"
-      ? "active-filter"
-      : ""
-  }
-  onClick={() => setSelectedCategory("Restaurant")}
->
-    Restaurants
-  </button>
+        <button
+          className={selectedCategory === "Park" ? "active-filter" : ""}
+          onClick={() => setSelectedCategory("Park")}
+        >
+          Parks
+        </button>
 
-  <button
-  className={
-    selectedCategory === "Park"
-      ? "active-filter"
-      : ""
-  }
-  onClick={() => setSelectedCategory("Park")}
->
-    Parks
-  </button>
+        <button
+          className={selectedCategory === "Music" ? "active-filter" : ""}
+          onClick={() => setSelectedCategory("Music")}
+        >
+          Music
+        </button>
 
-  <button
-  className={
-    selectedCategory === "Music"
-      ? "active-filter"
-      : ""
-  }
-  onClick={() => setSelectedCategory("Music")}
->
-    Music
-  </button>
-
-  <button
-  className={
-    selectedCategory === "Gallery"
-      ? "active-filter"
-      : ""
-  }
-  onClick={() => setSelectedCategory("Gallery")}
->
-    Galleries
-  </button>
-
-</div>
+        <button
+          className={selectedCategory === "Gallery" ? "active-filter" : ""}
+          onClick={() => setSelectedCategory("Gallery")}
+        >
+          Galleries
+        </button>
+      </div>
 
       <div className="explore-layout">
-
         <div className="add-venue-form">
+          <div className="venue-form-header">
+            <div className="venue-form-icon">
+              <Plus size={24} />
+            </div>
 
-  <input
-    type="text"
-    placeholder="Venue Name"
-    id="venue-name"
-  />
+            <div>
+              <h2>Add Venue</h2>
+              <p>Share a place with the GreenHaus community.</p>
+            </div>
+          </div>
 
-  <input
-    type="text"
-    placeholder="Location"
-    id="venue-location"
-  />
+          <div className="input-group">
+            <Building2 size={18} className="input-icon" />
 
-  <input
-    type="number"
-    placeholder="Latitude"
-    id="venue-lat"
-  />
+            <input
+              type="text"
+              placeholder="Venue Name"
+              value={venueName}
+              onChange={(e) => setVenueName(e.target.value)}
+            />
+          </div>
 
-  <input
-    type="number"
-    placeholder="Longitude"
-    id="venue-lng"
-  />
+          <div className="input-group">
+            <MapPin size={18} className="input-icon" />
+            <input
+              type="text"
+              placeholder="Location"
+              value={venueLocation}
+              onChange={(e) => setVenueLocation(e.target.value)}
+            />
+          </div>
 
-  <label
-  htmlFor="venue-image"
-  className="custom-file-upload"
->
-  Upload Venue Image
-</label>
+          <div className="coordinates-grid">
+            <div className="input-group">
+              <Compass size={18} className="input-icon" />
 
-<input
-  type="file"
-  id="venue-image"
-  className="hidden-file-input"
+              <input
+                type="number"
+                placeholder="Latitude"
+                value={venueLat}
+                onChange={(e) => setVenueLat(e.target.value)}
+              />
+            </div>
 
-  onChange={(e) => {
+            <div className="input-group">
+              <Compass size={18} className="input-icon" />
 
-    const file =
-      e.target.files[0];
+              <input
+                type="number"
+                placeholder="Longitude"
+                value={venueLng}
+                onChange={(e) => setVenueLng(e.target.value)}
+              />
+            </div>
+          </div>
 
-    if (file) {
+          <label htmlFor="venue-image" className="custom-file-upload">
+            Upload Venue Image
+          </label>
 
-      setImagePreview(
-        URL.createObjectURL(file)
-      );
+          <input
+            type="file"
+            id="venue-image"
+            className="hidden-file-input"
+            accept="image/*"
+            onChange={(e) => {
+              const file = e.target.files[0];
 
-    }
+              if (!file) return;
 
-  }}
-/>
+              setVenueImage(file);
+              setImagePreview(URL.createObjectURL(file));
+            }}
+          />
 
-{imagePreview && (
+          {imagePreview && (
+            <img src={imagePreview} alt="Preview" className="image-preview" />
+          )}
 
-  <img
-    src={imagePreview}
-    alt="Preview"
-    className="image-preview"
-  />
+          <div className="category-grid">
+            <button
+              type="button"
+              className={`category-chip ${venueCategory === "Music" ? "active" : ""}`}
+              onClick={() => setVenueCategory("Music")}
+            >
+              <Music4 size={18} />
+              <span>Music</span>
+            </button>
 
-)}
+            <button
+              type="button"
+              className={`category-chip ${venueCategory === "Gallery" ? "active" : ""}`}
+              onClick={() => setVenueCategory("Gallery")}
+            >
+              <GalleryHorizontal size={18} />
+              <span>Gallery</span>
+            </button>
 
-  <select id="venue-category">
+            <button
+              type="button"
+              className={`category-chip ${venueCategory === "Dispensary" ? "active" : ""}`}
+              onClick={() => setVenueCategory("Dispensary")}
+            >
+              <Store size={18} />
+              <span>Dispensary</span>
+            </button>
 
-    <option value="Music">
-      Music
-    </option>
+            <button
+              type="button"
+              className={`category-chip ${venueCategory === "Restaurant" ? "active" : ""}`}
+              onClick={() => setVenueCategory("Restaurant")}
+            >
+              <UtensilsCrossed size={18} />
+              <span>Restaurant</span>
+            </button>
 
-    <option value="Gallery">
-      Gallery
-    </option>
+            <button
+              type="button"
+              className={`category-chip ${venueCategory === "Park" ? "active" : ""}`}
+              onClick={() => setVenueCategory("Park")}
+            >
+              <Trees size={18} />
+              <span>Park</span>
+            </button>
+          </div>
 
-    <option value="Dispensary">
-      Dispensary
-    </option>
-
-    <option value="Restaurant">
-      Restaurant
-    </option>
-
-    <option value="Park">
-      Park
-    </option>
-
-  </select>
-
-  <button onClick={handleAddVenue}>
-    Add Venue
-  </button>
-
-</div>
+          <button onClick={handleAddVenue}>Add Venue</button>
+        </div>
 
         <section className="venues-list">
-  {filteredVenues.map((venue) => (
-    <div
-      className="venue-card"
-      key={venue.id}
-      onClick={() => setSelectedVenue(venue)}
-    >
+          {filteredVenues.map((venue) => (
+            <article
+              className="venue-card"
+              key={venue.id}
+              onClick={() => setSelectedVenue(venue)}
+            >
+              <div className="venue-image-wrapper">
+                <img
+                  src={
+                    venue.image_url ||
+                    "https://images.unsplash.com/photo-1514933651103-005eec06c04b"
+                  }
+                  alt={venue.name}
+                  className="venue-image"
+                />
 
-      {venue.image_url && (
+                <span className="venue-category">{venue.category}</span>
+              </div>
 
-  <img
-    src={venue.image_url}
-    alt={venue.name}
-    className="venue-image"
-  />
+              <div className="venue-content">
+                <h3>{venue.name}</h3>
 
-)}
+                <p className="venue-location">
+                  <MapPin size={15} />
+                  {venue.location}
+                </p>
 
-      <h3>{venue.name}</h3>
+                <p className="venue-description">{venue.description}</p>
 
-      <p>{venue.location}</p>
+                <button className="view-on-map-btn" type="button">
+                  View on Map
+                </button>
+              </div>
+            </article>
+          ))}
+        </section>
 
-      <span>{venue.category}</span>
+        <section className="map-section">
+          <div className="map-header">
+            <div>
+              <h2>Discover Nearby</h2>
+              <p>
+                Explore dispensaries, restaurants, galleries and experiences
+                around you.
+              </p>
+            </div>
 
-      <p>{venue.description}</p>
-    </div>
-  ))}
-</section>
+            <span className="venue-count">{filteredVenues.length} Places</span>
+          </div>
 
-        <section className="map-container">
-          <ExploreMap
-  venues={filteredVenues}
-  selectedVenue={selectedVenue}
-  userLocation={userLocation}
-/>
+          <div className="map-container">
+            <ExploreMap
+              venues={filteredVenues}
+              selectedVenue={selectedVenue}
+              userLocation={userLocation}
+            />
+          </div>
         </section>
       </div>
     </div>

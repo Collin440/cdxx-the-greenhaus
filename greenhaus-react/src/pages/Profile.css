@@ -1,3 +1,8 @@
+.profile-username {
+  margin-bottom: 20px;
+  color: #b5b5b5;
+}
+
 .profile-page {
   width: 100%;
   max-width: 900px;
@@ -82,7 +87,7 @@
   margin-top: 30px;
   padding-bottom: 15px;
 
-  border-bottom: 1px solid rgba(255,255,255,0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .profile-tabs button {
@@ -112,8 +117,8 @@
 }
 
 .profile-post-card {
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(0,255,120,0.15);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(0, 255, 120, 0.15);
   border-radius: 14px;
   padding: 16px;
   margin-bottom: 15px;
@@ -189,7 +194,7 @@
 
   border-radius: 999px;
 
-  background: rgba(255,255,255,0.08);
+  background: rgba(255, 255, 255, 0.08);
 
   overflow: hidden;
 }
@@ -217,9 +222,9 @@
 }
 
 .badge {
-  background: rgba(0,255,136,0.12);
+  background: rgba(0, 255, 136, 0.12);
 
-  border: 1px solid rgba(0,255,136,0.25);
+  border: 1px solid rgba(0, 255, 136, 0.25);
 
   color: #00ff88;
 
@@ -247,7 +252,7 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
-  color: rgba(255,255,255,0.85);
+  color: rgba(255, 255, 255, 0.85);
 }
 
 .profile-location,
@@ -344,7 +349,7 @@
   width: 100%;
 
   background: #07271f;
-  border: 1px solid rgba(0,255,140,0.15);
+  border: 1px solid rgba(0, 255, 140, 0.15);
 
   color: white;
 
@@ -365,7 +370,7 @@
 .edit-profile-modal input:focus,
 .edit-profile-modal textarea:focus {
   border-color: #00ff99;
-  box-shadow: 0 0 12px rgba(0,255,140,0.25);
+  box-shadow: 0 0 12px rgba(0, 255, 140, 0.25);
 }
 
 .modal-actions {
@@ -441,5 +446,203 @@
 
   margin: 10px 0;
 
-  border: 2px solid rgba(0,255,153,0.25);
+  border: 2px solid rgba(0, 255, 153, 0.25);
+}
+
+.follow-btn {
+  background: #67ffb3;
+  color: #001b12;
+  border: none;
+  padding: 12px 26px;
+  border-radius: 999px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 0 15px rgba(103, 255, 179, 0.4);
+}
+
+.follow-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 25px rgba(103, 255, 179, 0.7);
+}
+
+.following-btn {
+  background: transparent;
+  color: #67ffb3;
+  border: 2px solid #67ffb3;
+  padding: 12px 26px;
+  border-radius: 999px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.following-btn:hover {
+  background: rgba(255, 60, 60, 0.15);
+  border-color: #ff6666;
+  color: #ff6666;
+}
+
+.clickable-stat {
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.clickable-stat:hover {
+  transform: translateY(-2px);
+  color: #67ffb3;
+}
+
+.followers-modal {
+  width: 500px;
+  max-width: 90%;
+  background: #03241a;
+  border: 1px solid rgba(103, 255, 179, 0.2);
+  border-radius: 18px;
+  padding: 20px;
+  color: white;
+  box-shadow: 0 0 30px rgba(103, 255, 179, 0.15);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.close-modal-btn {
+  background: transparent;
+  border: none;
+  color: #67ffb3;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.followers-list {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.follower-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.follower-avatar {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.follower-item strong {
+  color: white;
+}
+
+.follower-item p {
+  color: #9ca3af;
+  font-size: 0.85rem;
+}
+
+/* Edit Profile Modal Buttons */
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.save-btn,
+.cancel-btn {
+  padding: 12px 28px;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.save-btn {
+  background: #00ff88;
+  color: #000;
+}
+
+.save-btn:hover {
+  background: #00d977;
+  transform: translateY(-2px);
+  box-shadow: 0 0 18px rgba(0, 255, 136, 0.45);
+}
+
+.cancel-btn {
+  background: #2b2b2b;
+  color: white;
+}
+
+.cancel-btn:hover {
+  background: #444;
+}
+
+/* =========================================
+   Avatar & Banner Upload
+========================================= */
+
+.file-upload-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.file-upload-group > label:first-child {
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.file-upload-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 180px;
+  height: 46px;
+
+  padding: 0 20px;
+
+  background: #00ff88;
+  color: #041b12;
+
+  border-radius: 12px;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: all 0.25s ease;
+}
+
+.file-upload-btn:hover {
+  background: #2bff9c;
+  transform: translateY(-2px);
+  box-shadow: 0 0 18px rgba(0, 255, 136, 0.35);
+}
+
+.file-upload-btn input {
+  display: none;
+}
+
+.file-name {
+  font-size: 14px;
+  color: #9aa5a0;
+  font-style: italic;
 }
