@@ -35,7 +35,7 @@ export async function uploadVenueImage(file) {
     .upload(fileName, file);
 
   if (error) {
-    console.error(error);
+    console.error("UPLOAD ERROR:", error);
 
     return null;
   }
@@ -45,4 +45,16 @@ export async function uploadVenueImage(file) {
   } = supabase.storage.from("venue-images").getPublicUrl(fileName);
 
   return publicUrl;
+}
+
+export async function deleteVenue(id) {
+  const { error } = await supabase.from("venues").delete().eq("id", id);
+
+  if (error) {
+    console.error(error);
+    alert("Failed to delete venue.");
+    return false;
+  }
+
+  return true;
 }

@@ -1,0 +1,142 @@
+.venue-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(8, 12, 10, 0.75);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 5000;
+  animation: fadeIn 0.25s ease;
+}
+
+.venue-modal {
+  width: min(900px, 92vw);
+  max-height: 90vh;
+  overflow-y: auto;
+  background: rgba(18, 26, 21, 0.95);
+  border: 1px solid rgba(103, 255, 179, 0.15);
+  border-radius: 24px;
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.45);
+  position: relative;
+}
+
+.venue-modal-image {
+  width: 100%;
+  height: 340px;
+  object-fit: cover;
+  display: block;
+}
+
+.venue-modal-content {
+  padding: 2rem;
+}
+
+.venue-modal-content h2 {
+  color: #67ffb3;
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.venue-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.venue-meta span {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.55rem 1rem;
+  border-radius: 999px;
+  color: #d8e6dd;
+  font-size: 0.9rem;
+}
+
+.venue-modal-content p {
+  color: #c7d4cb;
+  line-height: 1.7;
+  margin-bottom: 2rem;
+}
+
+.venue-directions-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: linear-gradient(135deg, #4ade80, #22c55e);
+  color: #08110c;
+  padding: 0.9rem 1.5rem;
+  border-radius: 14px;
+  text-decoration: none;
+  font-weight: 700;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.venue-directions-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(34, 197, 94, 0.35);
+}
+
+.venue-close-btn {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 42px;
+  height: 42px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.55);
+  color: white;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: all 0.2s ease;
+}
+
+.venue-close-btn:hover {
+  background: #67ffb3;
+  color: #08110c;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.delete-venue-btn {
+  width: 100%;
+  margin-top: 1rem;
+  padding: 0.9rem 1rem;
+
+  background: #c62828;
+  color: white;
+
+  border: none;
+  border-radius: 12px;
+
+  font-size: 1rem;
+  font-weight: 600;
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.delete-venue-btn:hover {
+  background: #b71c1c;
+  transform: translateY(-2px);
+}
+
+.delete-venue-btn:active {
+  transform: translateY(0);
+}

@@ -1,4 +1,5 @@
 import "./Explore.css";
+import VenueModal from "../components/VenueModal";
 import ExploreMap from "./ExploreMap";
 import { useEffect, useState } from "react";
 import {
@@ -14,12 +15,19 @@ import {
   GalleryHorizontal,
 } from "lucide-react";
 
-import { fetchVenues, addVenue, uploadVenueImage } from "../lib/venues";
+import {
+  fetchVenues,
+  addVenue,
+  uploadVenueImage,
+  deleteVenue,
+} from "../lib/venues";
 
 function Explore() {
   const [selectedCategory, setSelectedCategory] = useState("All");
 
   const [selectedVenue, setSelectedVenue] = useState(null);
+
+  const [venueModalOpen, setVenueModalOpen] = useState(false);
 
   const [showAddVenueModal, setShowAddVenueModal] = useState(false);
 
@@ -132,6 +140,23 @@ function Explore() {
     setVenueCategory("Music");
     setVenueImage(null);
     setImagePreview("");
+  }
+
+  async function handleDeleteVenue() {
+    if (!selectedVenue) return;
+
+    const confirmed = window.confirm(`Delete "${selectedVenue.name}"?`);
+
+    if (!confirmed) return;
+
+    const success = await deleteVenue(selectedVenue.id);
+
+    if (!success) return;
+
+    setVenues((prev) => prev.filter((venue) => venue.id !== selectedVenue.id));
+
+    setVenueModalOpen(false);
+    setSelectedVenue(null);
   }
 
   const filteredVenues = venues.filter((venue) => {
@@ -345,7 +370,10 @@ function Explore() {
             <article
               className="venue-card"
               key={venue.id}
-              onClick={() => setSelectedVenue(venue)}
+              onClick={() => {
+                setSelectedVenue(venue);
+                setVenueModalOpen(true);
+              }}
             >
               <div className="venue-image-wrapper">
                 <img
@@ -400,6 +428,13 @@ function Explore() {
           </div>
         </section>
       </div>
+
+      <VenueModal
+        venue={selectedVenue}
+        isOpen={venueModalOpen}
+        onClose={() => setVenueModalOpen(false)}
+        onDelete={handleDeleteVenue}
+      />
     </div>
   );
 }
