@@ -3,6 +3,14 @@ import { useEffect, useState } from "react";
 import logo from "../assets/cdxx_logo.jpeg";
 import { supabase } from "../lib/supabase";
 import { useParams, useNavigate } from "react-router-dom";
+import {
+  Heart,
+  MessageCircle,
+  Bookmark,
+  Share2,
+  MoreHorizontal,
+} from "lucide-react";
+import { X } from "lucide-react";
 import "./Profile.css";
 
 function Profile() {
@@ -15,6 +23,8 @@ function Profile() {
   const isOwnProfile = profileId === user?.id;
 
   const [profile, setProfile] = useState(null);
+
+  const [selectedPost, setSelectedPost] = useState(null);
 
   const [activeTab, setActiveTab] = useState("posts");
 
@@ -519,19 +529,59 @@ function Profile() {
         </button>
       </div>
 
-      {activeTab === "posts" && (
-        <div className="profile-posts">
-          {posts.length === 0 ? (
-            <div className="empty-profile-state">No posts yet.</div>
-          ) : (
-            posts.map((post) => (
-              <div key={post.id} className="profile-post-card">
-                <p>{post.content}</p>
+      {activeTab === "posts" ? (
+        <div className="profile-post-grid">
+          {posts.map((post) => (
+            <div
+              key={post.id}
+              className="profile-post-tile"
+              onClick={() => setSelectedPost(post)}
+            >
+              {post.image_url ? (
+                <img
+                  src={post.image_url}
+                  alt=""
+                  className="profile-post-image"
+                />
+              ) : (
+                <div className="text-post">
+                  <p>{post.content}</p>
+                </div>
+              )}
 
-                <small>{new Date(post.created_at).toLocaleDateString()}</small>
+              <div className="profile-post-overlay">
+                <div className="overlay-stats">
+                  <span className="overlay-stat">
+                    <Heart size={18} fill="currentColor" />
+                    {post.likes ?? 0}
+                  </span>
+
+                  <span className="overlay-stat">
+                    <MessageCircle size={18} />
+                    {post.comments?.length ?? 0}
+                  </span>
+                </div>
               </div>
-            ))
-          )}
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="profile-grid">
+          {posts.map((post) => (
+            <div key={post.id} className="profile-grid-item">
+              {post.image_url ? (
+                <img
+                  src={post.image_url}
+                  alt=""
+                  className="profile-grid-image"
+                />
+              ) : (
+                <div className="profile-grid-text">
+                  <p>{post.content}</p>
+                </div>
+              )}
+            </div>
+          ))}
         </div>
       )}
 
@@ -643,7 +693,7 @@ function Profile() {
                 className="close-modal-btn"
                 onClick={() => setShowFollowersModal(false)}
               >
-                ✕
+                <X size={22} />
               </button>
             </div>
 
@@ -691,7 +741,7 @@ function Profile() {
                 className="close-modal-btn"
                 onClick={() => setShowFollowingModal(false)}
               >
-                ✕
+                <X size={22} />
               </button>
             </div>
 
@@ -722,6 +772,104 @@ function Profile() {
                   </div>
                 ))
               )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {selectedPost && (
+        <div
+          className="post-modal-overlay"
+          onClick={() => setSelectedPost(null)}
+        >
+          <div className="post-modal" onClick={(e) => e.stopPropagation()}>
+            <button
+              className="close-post-modal"
+              onClick={() => setSelectedPost(null)}
+            >
+              <X size={22} />
+            </button>
+
+            <div className="post-modal-media">
+              {selectedPost.image_url ? (
+                <img
+                  src={selectedPost.image_url}
+                  alt=""
+                  className="post-modal-image"
+                />
+              ) : (
+                <div className="post-modal-text">
+                  <p>{selectedPost.content}</p>
+                </div>
+              )}
+            </div>
+
+            <div className="post-modal-content">
+              <div className="post-author">
+                <img
+                  src={profile?.avatar_url || logo}
+                  alt=""
+                  className="post-author-avatar"
+                />
+
+                <div>
+                  <strong>{profile?.display_name}</strong>
+
+                  <p>@{profile?.username}</p>
+                </div>
+              </div>
+
+              <p className="post-caption">{selectedPost.content}</p>
+
+              <div className="post-comments">
+                {selectedPost.comments?.length ? (
+                  selectedPost.comments.map((comment) => (
+                    <div key={comment.id} className="post-comment">
+                      <strong>{comment.username}</strong>
+
+                      <p>{comment.text}</p>
+                    </div>
+                  ))
+                ) : (
+                  <div className="no-comments">No comments yet.</div>
+                )}
+              </div>
+
+              <div className="comment-input-container">
+                <input
+                  type="text"
+                  placeholder="Write a comment..."
+                  className="comment-input"
+                />
+
+                <button className="comment-send-btn">Send</button>
+              </div>
+
+              <div className="post-actions">
+                <button className="icon-btn">
+                  <Heart size={18} />
+                </button>
+
+                <button className="icon-btn">
+                  <MessageCircle size={18} />
+                </button>
+
+                <button className="icon-btn">
+                  <Share2 size={18} />
+                </button>
+
+                <button className="icon-btn">
+                  <Bookmark size={18} />
+                </button>
+
+                <button className="more-btn">
+                  <MoreHorizontal size={18} />
+                </button>
+              </div>
+
+              <small className="post-date">
+                {new Date(selectedPost.created_at).toLocaleString()}
+              </small>
             </div>
           </div>
         </div>

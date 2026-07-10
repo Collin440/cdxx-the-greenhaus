@@ -1,12 +1,10 @@
-.profile-username {
-  margin-bottom: 20px;
-  color: #b5b5b5;
-}
+/* =========================================
+   PROFILE LAYOUT
+========================================= */
 
 .profile-page {
   width: 100%;
   max-width: 900px;
-
   margin: 0 auto;
 
   display: flex;
@@ -14,11 +12,24 @@
   align-items: center;
 }
 
+.profile-banner {
+  width: 100%;
+  height: 350px;
+
+  background-size: cover;
+  background-position: center;
+
+  border-radius: 20px;
+  margin-bottom: -70px;
+}
+
 .profile-avatar {
   width: 160px;
   height: 160px;
+
   border-radius: 50%;
   object-fit: cover;
+
   border: 3px solid #39ff88;
   box-shadow: 0 0 20px #39ff88;
 }
@@ -31,6 +42,15 @@
 .profile-page p {
   color: #cfcfcf;
 }
+
+.profile-username {
+  margin-bottom: 20px;
+  color: #b5b5b5;
+}
+
+/* =========================================
+   PROFILE STATS
+========================================= */
 
 .profile-stats {
   display: flex;
@@ -48,37 +68,33 @@
   color: #39ff88;
 }
 
-.profile-banner {
-  width: 100%;
-  height: 350px;
-
-  background-size: cover;
-  background-position: center;
-
-  border-radius: 20px;
-  margin-bottom: -70px;
-}
+/* =========================================
+   EDIT PROFILE BUTTON
+========================================= */
 
 .edit-profile-btn {
   margin-top: 12px;
-
   padding: 10px 20px;
 
   border: none;
   border-radius: 10px;
 
   background: #00ff88;
-  color: black;
+  color: #000;
 
   font-weight: 600;
   cursor: pointer;
 
-  transition: 0.3s;
+  transition: transform 0.3s ease;
 }
 
 .edit-profile-btn:hover {
   transform: scale(1.05);
 }
+
+/* =========================================
+   PROFILE TABS
+========================================= */
 
 .profile-tabs {
   display: flex;
@@ -94,34 +110,40 @@
   background: transparent;
   border: none;
 
-  color: white;
+  color: #fff;
 
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
 
   cursor: pointer;
 
-  padding-bottom: 10px;
+  padding: 10px;
 }
 
 .active-tab {
   color: #00ff88;
-
   border-bottom: 2px solid #00ff88;
 }
 
+/* =========================================
+   PROFILE POSTS
+========================================= */
+
 .profile-posts {
-  margin-top: 30px;
   width: 100%;
   max-width: 700px;
+  margin-top: 30px;
 }
 
 .profile-post-card {
   background: rgba(255, 255, 255, 0.04);
+
   border: 1px solid rgba(0, 255, 120, 0.15);
   border-radius: 14px;
+
   padding: 16px;
   margin-bottom: 15px;
+
   text-align: left;
 }
 
@@ -133,30 +155,17 @@
   opacity: 0.7;
 }
 
-.active-tab {
-  color: #00ff88;
-  border-bottom: 2px solid #00ff88;
-}
-
-.profile-tabs button {
-  background: none;
-  border: none;
-  color: white;
-  cursor: pointer;
-  padding: 10px;
-  font-size: 15px;
-}
-
-/* PROFILE DETAILS */
+/* =========================================
+   PROFILE DETAILS
+========================================= */
 
 .profile-details {
   margin-top: 15px;
 
   display: flex;
   flex-direction: column;
-  gap: 8px;
-
   align-items: center;
+  gap: 8px;
 
   color: #b8b8b8;
 }
@@ -170,18 +179,18 @@
   text-decoration: underline;
 }
 
-/* PROFILE COMPLETION */
+/* =========================================
+   PROFILE COMPLETION
+========================================= */
 
 .profile-completion {
   width: 100%;
   max-width: 500px;
-
   margin-top: 25px;
 }
 
 .completion-header {
   display: flex;
-
   justify-content: space-between;
 
   margin-bottom: 8px;
@@ -192,109 +201,82 @@
 .completion-bar {
   height: 12px;
 
-  border-radius: 999px;
-
   background: rgba(255, 255, 255, 0.08);
 
+  border-radius: 999px;
   overflow: hidden;
 }
 
 .completion-fill {
   height: 100%;
-
   background: #00ff88;
-
   transition: width 0.4s ease;
 }
 
-/* BADGES */
+/* =========================================
+   BADGES
+========================================= */
 
 .profile-badges {
   display: flex;
-
-  gap: 10px;
-
-  flex-wrap: wrap;
-
   justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
 
   margin-top: 20px;
 }
 
 .badge {
-  background: rgba(0, 255, 136, 0.12);
-
-  border: 1px solid rgba(0, 255, 136, 0.25);
-
-  color: #00ff88;
-
   padding: 6px 12px;
 
+  background: rgba(0, 255, 136, 0.12);
+  border: 1px solid rgba(0, 255, 136, 0.25);
   border-radius: 999px;
 
+  color: #00ff88;
   font-size: 13px;
 }
 
-/* EMPTY STATE */
+/* =========================================
+   EMPTY STATE
+========================================= */
 
 .empty-profile-state {
-  text-align: center;
-
-  color: #888;
-
+  margin-top: 20px;
   padding: 30px;
 
-  margin-top: 20px;
+  text-align: center;
+  color: #888;
 }
 
-.profile-details {
-  margin-top: 15px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  color: rgba(255, 255, 255, 0.85);
-}
-
-.profile-location,
-.profile-website,
-.profile-joined {
-  font-size: 0.95rem;
-}
-
-.profile-website a {
-  color: #00ff88;
-  text-decoration: none;
-  margin-left: 5px;
-}
-
-.profile-website a:hover {
-  text-decoration: underline;
-}
-
-/* =========================
+/* =========================================
    PROFILE DETAILS
-========================= */
+========================================= */
 
 .profile-details {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 10px;
-  margin: 18px 0;
-  align-items: center;
-}
 
-.profile-location,
-.profile-website,
-.profile-joined {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  margin: 18px 0;
 
   color: #cfcfcf;
+}
+
+.profile-location,
+.profile-website,
+.profile-joined {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
   font-size: 0.95rem;
 }
 
 .profile-website a {
+  margin-left: 5px;
+
   color: #18ff8b;
   text-decoration: none;
 }
@@ -303,20 +285,22 @@
   text-decoration: underline;
 }
 
-/* =========================
+/* =========================================
    EDIT PROFILE MODAL
-========================= */
+========================================= */
 
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.85);
 
   display: flex;
   justify-content: center;
   align-items: center;
 
+  background: rgba(0, 0, 0, 0.85);
+
   z-index: 9999;
+
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
 }
@@ -325,11 +309,11 @@
   width: 90%;
   max-width: 650px;
 
+  padding: 30px;
+
   background: #041d16;
   border: 1px solid rgba(0, 255, 140, 0.2);
-
   border-radius: 20px;
-  padding: 30px;
 
   box-shadow:
     0 0 25px rgba(0, 255, 140, 0.15),
@@ -339,8 +323,9 @@
 }
 
 .edit-profile-modal h2 {
-  color: #00ff99;
   margin-bottom: 20px;
+
+  color: #00ff99;
   text-align: center;
 }
 
@@ -348,23 +333,22 @@
 .edit-profile-modal textarea {
   width: 100%;
 
+  margin-bottom: 15px;
+  padding: 14px;
+
   background: #07271f;
   border: 1px solid rgba(0, 255, 140, 0.15);
-
-  color: white;
-
-  padding: 14px;
-  margin-bottom: 15px;
-
   border-radius: 12px;
-  outline: none;
 
+  color: #fff;
   font-size: 14px;
+
+  outline: none;
 }
 
 .edit-profile-modal textarea {
-  resize: vertical;
   min-height: 100px;
+  resize: vertical;
 }
 
 .edit-profile-modal input:focus,
@@ -377,19 +361,22 @@
   display: flex;
   justify-content: flex-end;
   gap: 12px;
-  margin-top: 10px;
+
+  margin-top: 24px;
 }
 
 .save-btn,
 .cancel-btn {
-  border: none;
-  cursor: pointer;
+  padding: 12px 28px;
 
-  padding: 12px 22px;
+  border: none;
   border-radius: 12px;
 
+  font-size: 15px;
   font-weight: 600;
-  transition: 0.2s;
+
+  cursor: pointer;
+  transition: all 0.25s ease;
 }
 
 .save-btn {
@@ -398,16 +385,18 @@
 }
 
 .save-btn:hover {
+  background: #00d977;
   transform: translateY(-2px);
+  box-shadow: 0 0 18px rgba(0, 255, 136, 0.45);
 }
 
 .cancel-btn {
-  background: #1a1a1a;
-  color: white;
+  background: #2b2b2b;
+  color: #fff;
 }
 
 .cancel-btn:hover {
-  background: #252525;
+  background: #444;
 }
 
 @keyframes modalFade {
@@ -422,42 +411,58 @@
   }
 }
 
+/* =========================================
+   IMAGE PREVIEWS
+========================================= */
+
 .avatar-preview {
+  display: block;
+
   width: 90px;
   height: 90px;
-
-  border-radius: 50%;
-  object-fit: cover;
-
-  display: block;
 
   margin: 10px auto;
 
   border: 3px solid #00ff99;
+  border-radius: 50%;
+
+  object-fit: cover;
 }
 
 .banner-preview {
   width: 100%;
   height: 120px;
 
-  object-fit: cover;
-
-  border-radius: 12px;
-
   margin: 10px 0;
 
   border: 2px solid rgba(0, 255, 153, 0.25);
+  border-radius: 12px;
+
+  object-fit: cover;
+}
+
+/* =========================================
+   FOLLOW BUTTONS
+========================================= */
+
+.follow-btn,
+.following-btn {
+  padding: 12px 26px;
+
+  border-radius: 999px;
+
+  font-weight: 700;
+  cursor: pointer;
+
+  transition: all 0.2s ease;
 }
 
 .follow-btn {
   background: #67ffb3;
   color: #001b12;
+
   border: none;
-  padding: 12px 26px;
-  border-radius: 999px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.2s ease;
+
   box-shadow: 0 0 15px rgba(103, 255, 179, 0.4);
 }
 
@@ -468,24 +473,25 @@
 
 .following-btn {
   background: transparent;
+
   color: #67ffb3;
   border: 2px solid #67ffb3;
-  padding: 12px 26px;
-  border-radius: 999px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.2s ease;
 }
 
 .following-btn:hover {
   background: rgba(255, 60, 60, 0.15);
+
   border-color: #ff6666;
   color: #ff6666;
 }
 
+/* =========================================
+   CLICKABLE STATS
+========================================= */
+
 .clickable-stat {
   cursor: pointer;
-  transition: 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .clickable-stat:hover {
@@ -493,14 +499,22 @@
   color: #67ffb3;
 }
 
+/* =========================================
+   FOLLOWERS / FOLLOWING MODAL
+========================================= */
+
 .followers-modal {
   width: 500px;
   max-width: 90%;
+
+  padding: 20px;
+
   background: #03241a;
   border: 1px solid rgba(103, 255, 179, 0.2);
   border-radius: 18px;
-  padding: 20px;
-  color: white;
+
+  color: #fff;
+
   box-shadow: 0 0 30px rgba(103, 255, 179, 0.15);
 }
 
@@ -508,14 +522,17 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+
   margin-bottom: 18px;
 }
 
 .close-modal-btn {
   background: transparent;
   border: none;
+
   color: #67ffb3;
   font-size: 20px;
+
   cursor: pointer;
 }
 
@@ -528,21 +545,26 @@
   display: flex;
   align-items: center;
   gap: 12px;
+
   padding: 12px 0;
+
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+
   cursor: pointer;
-  transition: 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .follower-avatar {
   width: 45px;
   height: 45px;
+
   border-radius: 50%;
+
   object-fit: cover;
 }
 
 .follower-item strong {
-  color: white;
+  color: #fff;
 }
 
 .follower-item p {
@@ -550,7 +572,185 @@
   font-size: 0.85rem;
 }
 
-/* Edit Profile Modal Buttons */
+/* =========================================
+   PROFILE DETAILS
+========================================= */
+
+.profile-details {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin: 18px 0;
+  color: #cfcfcf;
+}
+
+.profile-location,
+.profile-website,
+.profile-joined {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95rem;
+}
+
+.profile-details a,
+.profile-website a {
+  color: #18ff8b;
+  text-decoration: none;
+}
+
+.profile-details a:hover,
+.profile-website a:hover {
+  text-decoration: underline;
+}
+
+/* =========================================
+   PROFILE COMPLETION
+========================================= */
+
+.profile-completion {
+  width: 100%;
+  max-width: 500px;
+  margin-top: 25px;
+}
+
+.completion-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.completion-bar {
+  height: 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.completion-fill {
+  height: 100%;
+  background: #00ff88;
+  transition: width 0.4s ease;
+}
+
+/* =========================================
+   BADGES
+========================================= */
+
+.profile-badges {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.badge {
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  color: #00ff88;
+  background: rgba(0, 255, 136, 0.12);
+  border: 1px solid rgba(0, 255, 136, 0.25);
+}
+
+/* =========================================
+   EMPTY STATE
+========================================= */
+
+.empty-profile-state {
+  margin-top: 20px;
+  padding: 30px;
+  text-align: center;
+  color: #888;
+}
+
+/* =========================================
+   EDIT PROFILE MODAL
+========================================= */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+
+  background: rgba(0, 0, 0, 0.85);
+
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+.edit-profile-modal {
+  width: 90%;
+  max-width: 650px;
+
+  padding: 30px;
+
+  border-radius: 20px;
+
+  background: #041d16;
+  border: 1px solid rgba(0, 255, 140, 0.2);
+
+  box-shadow:
+    0 0 25px rgba(0, 255, 140, 0.15),
+    0 0 60px rgba(0, 255, 140, 0.05);
+
+  animation: modalFade 0.25s ease;
+}
+
+.edit-profile-modal h2 {
+  margin-bottom: 20px;
+  text-align: center;
+  color: #00ff99;
+}
+
+.edit-profile-modal input,
+.edit-profile-modal textarea {
+  width: 100%;
+  margin-bottom: 15px;
+  padding: 14px;
+
+  border-radius: 12px;
+  outline: none;
+
+  font-size: 14px;
+  color: white;
+
+  background: #07271f;
+  border: 1px solid rgba(0, 255, 140, 0.15);
+}
+
+.edit-profile-modal textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.edit-profile-modal input:focus,
+.edit-profile-modal textarea:focus {
+  border-color: #00ff99;
+  box-shadow: 0 0 12px rgba(0, 255, 140, 0.25);
+}
+
+@keyframes modalFade {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =========================================
+   MODAL BUTTONS
+========================================= */
 
 .modal-actions {
   display: flex;
@@ -564,10 +764,12 @@
   padding: 12px 28px;
   border: none;
   border-radius: 10px;
+
   font-size: 15px;
   font-weight: 600;
+
   cursor: pointer;
-  transition: all 0.25s ease;
+  transition: 0.25s ease;
 }
 
 .save-btn {
@@ -591,44 +793,207 @@
 }
 
 /* =========================================
-   Avatar & Banner Upload
+   AVATAR / BANNER PREVIEW
+========================================= */
+
+.avatar-preview {
+  display: block;
+  width: 90px;
+  height: 90px;
+  margin: 10px auto;
+
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid #00ff99;
+}
+
+.banner-preview {
+  width: 100%;
+  height: 120px;
+  margin: 10px 0;
+
+  object-fit: cover;
+
+  border-radius: 12px;
+  border: 2px solid rgba(0, 255, 153, 0.25);
+}
+
+/* =========================================
+   FOLLOW BUTTONS
+========================================= */
+
+.follow-btn {
+  padding: 12px 26px;
+
+  border: none;
+  border-radius: 999px;
+
+  cursor: pointer;
+
+  font-weight: 700;
+
+  color: #001b12;
+  background: #67ffb3;
+
+  box-shadow: 0 0 15px rgba(103, 255, 179, 0.4);
+
+  transition: 0.2s ease;
+}
+
+.follow-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 25px rgba(103, 255, 179, 0.7);
+}
+
+.following-btn {
+  padding: 12px 26px;
+
+  border-radius: 999px;
+  border: 2px solid #67ffb3;
+
+  cursor: pointer;
+
+  font-weight: 700;
+
+  background: transparent;
+  color: #67ffb3;
+
+  transition: 0.2s ease;
+}
+
+.following-btn:hover {
+  background: rgba(255, 60, 60, 0.15);
+  border-color: #ff6666;
+  color: #ff6666;
+}
+
+/* =========================================
+   CLICKABLE STATS
+========================================= */
+
+.clickable-stat {
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.clickable-stat:hover {
+  transform: translateY(-2px);
+  color: #67ffb3;
+}
+
+/* =========================================
+   FOLLOWERS MODAL
+========================================= */
+
+.followers-modal {
+  width: 500px;
+  max-width: 90%;
+
+  padding: 20px;
+
+  border-radius: 18px;
+
+  color: white;
+
+  background: #03241a;
+  border: 1px solid rgba(103, 255, 179, 0.2);
+
+  box-shadow: 0 0 30px rgba(103, 255, 179, 0.15);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.close-modal-btn {
+  border: none;
+  background: transparent;
+
+  color: #67ffb3;
+  font-size: 20px;
+
+  cursor: pointer;
+}
+
+.followers-list {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.follower-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  padding: 12px 0;
+
+  cursor: pointer;
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+
+  transition: 0.2s ease;
+}
+
+.follower-avatar {
+  width: 45px;
+  height: 45px;
+
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.follower-item strong {
+  color: white;
+}
+
+.follower-item p {
+  color: #9ca3af;
+  font-size: 0.85rem;
+}
+
+/* =========================================
+   FILE UPLOAD
 ========================================= */
 
 .file-upload-group {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+
   gap: 10px;
   margin: 20px 0;
 }
 
 .file-upload-group > label:first-child {
+  color: white;
   font-size: 16px;
   font-weight: 600;
-  color: #ffffff;
 }
 
 .file-upload-btn {
   display: inline-flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
 
   min-width: 180px;
   height: 46px;
 
   padding: 0 20px;
 
-  background: #00ff88;
-  color: #041b12;
-
   border-radius: 12px;
+
+  cursor: pointer;
 
   font-size: 15px;
   font-weight: 600;
 
-  cursor: pointer;
+  color: #041b12;
+  background: #00ff88;
 
-  transition: all 0.25s ease;
+  transition: 0.25s ease;
 }
 
 .file-upload-btn:hover {
@@ -642,7 +1007,426 @@
 }
 
 .file-name {
-  font-size: 14px;
   color: #9aa5a0;
+  font-size: 14px;
   font-style: italic;
+}
+
+/* ==========================================
+   PROFILE POSTS GRID
+========================================== */
+
+.profile-post-grid {
+  width: 100%;
+  margin-top: 30px;
+
+  column-count: 3;
+  column-gap: 18px;
+}
+
+.profile-post-tile {
+  position: relative;
+
+  aspect-ratio: 1;
+
+  background: #08281b;
+
+  border-radius: 18px;
+
+  overflow: hidden;
+
+  cursor: pointer;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.profile-post-tile:hover {
+  transform: translateY(-6px);
+
+  box-shadow:
+    0 10px 35px rgba(0, 0, 0, 0.35),
+    0 0 18px rgba(0, 255, 120, 0.25);
+}
+
+.profile-post-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+
+  transition: transform 0.35s ease;
+}
+
+.profile-post-tile:hover .profile-post-image {
+  transform: scale(1.08);
+}
+
+.profile-post-overlay {
+  position: absolute;
+  inset: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 28px;
+
+  background: rgba(0, 0, 0, 0.45);
+
+  opacity: 0;
+
+  transition: opacity 0.25s ease;
+
+  color: white;
+
+  font-weight: 600;
+}
+
+.profile-post-tile:hover .profile-post-overlay {
+  opacity: 1;
+}
+
+.overlay-stat {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  color: #ffffff;
+}
+
+.overlay-stat svg {
+  stroke-width: 2;
+}
+
+.profile-post-overlay span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  font-size: 0.95rem;
+}
+
+.profile-post-tile:nth-child(6n + 1) .profile-post-image {
+  height: 220px;
+}
+
+.profile-post-tile:nth-child(6n + 2) .profile-post-image {
+  height: 380px;
+}
+
+.profile-post-tile:nth-child(6n + 3) .profile-post-image {
+  height: 280px;
+}
+
+.profile-post-tile:nth-child(6n + 4) .profile-post-image {
+  height: 470px;
+}
+
+.profile-post-tile:nth-child(6n + 5) .profile-post-image {
+  height: 320px;
+}
+
+.profile-post-tile:nth-child(6n) .profile-post-image {
+  height: 250px;
+}
+
+.text-post {
+  min-height: 260px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 30px;
+
+  text-align: center;
+
+  color: white;
+
+  line-height: 1.7;
+
+  background: linear-gradient(
+    145deg,
+    rgba(0, 255, 120, 0.06),
+    rgba(255, 255, 255, 0.02)
+  );
+}
+
+/* ==========================================
+   POST MODAL
+========================================== */
+
+.post-modal-overlay {
+  position: fixed;
+  inset: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: rgba(0, 0, 0, 0.82);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+
+  z-index: 9999;
+}
+
+.post-modal {
+  width: min(1100px, 95vw);
+  max-height: 90vh;
+
+  display: grid;
+  grid-template-columns: 1.2fr 420px;
+
+  overflow: hidden;
+
+  border-radius: 22px;
+
+  background: #061a13;
+
+  border: 1px solid rgba(0, 255, 136, 0.15);
+
+  box-shadow:
+    0 0 40px rgba(0, 255, 136, 0.08),
+    0 20px 70px rgba(0, 0, 0, 0.55);
+}
+
+.post-modal-media {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: #000;
+
+  min-height: 650px;
+}
+
+.post-modal-image {
+  width: 100%;
+  height: 100%;
+
+  object-fit: contain;
+}
+
+.post-modal-text {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 50px;
+
+  text-align: center;
+
+  font-size: 1.15rem;
+  line-height: 1.8;
+
+  color: white;
+}
+
+.post-modal-content {
+  display: flex;
+  flex-direction: column;
+
+  padding: 28px;
+
+  overflow-y: auto;
+}
+
+.post-author {
+  display: flex;
+  align-items: center;
+
+  gap: 14px;
+
+  padding-bottom: 18px;
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.post-author-avatar {
+  width: 54px;
+  height: 54px;
+
+  border-radius: 50%;
+  object-fit: cover;
+
+  border: 2px solid #00ff88;
+}
+
+.post-author strong {
+  display: block;
+  color: white;
+}
+
+.post-author p {
+  color: #8b8b8b;
+}
+
+.post-caption {
+  margin: 24px 0;
+
+  line-height: 1.8;
+
+  color: #f4f4f4;
+}
+
+.post-actions {
+  display: flex;
+  flex-wrap: wrap;
+
+  gap: 12px;
+
+  margin-top: auto;
+}
+
+.post-actions button {
+  padding: 11px 18px;
+
+  border: none;
+  border-radius: 999px;
+
+  background: rgba(255, 255, 255, 0.05);
+
+  color: white;
+
+  cursor: pointer;
+
+  transition: 0.25s;
+}
+
+.post-actions button:hover {
+  background: #00ff88;
+  color: black;
+}
+
+.post-date {
+  margin-top: 24px;
+
+  color: #888;
+}
+
+.close-post-modal {
+  position: absolute;
+
+  right: 30px;
+  top: 30px;
+
+  width: 44px;
+  height: 44px;
+
+  border-radius: 50%;
+
+  border: none;
+
+  background: rgba(255, 255, 255, 0.08);
+
+  color: white;
+
+  font-size: 20px;
+
+  cursor: pointer;
+
+  transition: 0.25s;
+}
+
+.close-post-modal:hover {
+  background: #00ff88;
+  color: black;
+}
+
+/* ===========================
+   POST COMMENTS
+=========================== */
+
+.post-comments {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  margin: 24px 0;
+
+  max-height: 240px;
+  overflow-y: auto;
+
+  padding-right: 6px;
+}
+
+.post-comment {
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.post-comment strong {
+  display: block;
+  margin-bottom: 5px;
+
+  color: #ffffff;
+  font-size: 0.95rem;
+}
+
+.post-comment p {
+  color: #cfcfcf;
+  line-height: 1.5;
+}
+
+.no-comments {
+  text-align: center;
+  color: #808080;
+  padding: 20px 0;
+}
+
+/* ===========================
+   COMMENT INPUT
+=========================== */
+
+.comment-input-container {
+  display: flex;
+  gap: 12px;
+
+  margin-bottom: 22px;
+}
+
+.comment-input {
+  flex: 1;
+
+  background: rgba(255, 255, 255, 0.05);
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  color: white;
+
+  padding: 12px 16px;
+
+  border-radius: 12px;
+
+  outline: none;
+}
+
+.comment-input:focus {
+  border-color: #00ff88;
+}
+
+.comment-send-btn {
+  background: #00ff88;
+  color: #041b12;
+
+  border: none;
+
+  border-radius: 12px;
+
+  padding: 0 22px;
+
+  cursor: pointer;
+
+  font-weight: 600;
+
+  transition: 0.25s;
+}
+
+.comment-send-btn:hover {
+  background: #2bff9c;
 }
