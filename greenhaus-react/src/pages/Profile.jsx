@@ -9,8 +9,9 @@ import {
   Bookmark,
   Share2,
   MoreHorizontal,
+  X,
 } from "lucide-react";
-import { X } from "lucide-react";
+
 import "./Profile.css";
 
 function Profile() {

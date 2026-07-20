@@ -181,28 +181,78 @@
 }
 
 /* =========================
+   COMMENT BUTTON
+========================= */
+
+.comment-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 8px 16px;
+
+  border: 1px solid rgba(0, 255, 170, 0.25);
+  border-radius: 999px;
+
+  background: rgba(255, 255, 255, 0.04);
+
+  color: #b7c5bf;
+
+  cursor: pointer;
+
+  transition: all 0.25s ease;
+
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.comment-button svg {
+  transition: all 0.25s ease;
+}
+
+.comment-button:hover {
+  background: rgba(0, 255, 170, 0.12);
+
+  border-color: #27ff8a;
+
+  color: #27ff8a;
+
+  transform: translateY(-2px);
+}
+
+.comment-button:hover svg {
+  transform: scale(1.15);
+}
+
+.comment-button:active {
+  transform: scale(0.96);
+}
+
+/* =========================
    POST ACTION BUTTONS
 ========================= */
 
 .post-actions {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-top: 16px;
+  gap: 10px;
+  margin-top: 18px;
 }
 
 .action-button {
-  width: 40px;
-  height: 40px;
-
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
 
-  border: none;
-  border-radius: 50%;
+  height: 40px;
+  min-width: 40px;
 
-  background: transparent;
+  padding: 0 14px;
+
+  border: 1px solid rgba(0, 255, 170, 0.18);
+  border-radius: 999px;
+
+  background: rgba(255, 255, 255, 0.04);
 
   color: #8ea59b;
 
@@ -212,21 +262,24 @@
 }
 
 .action-button:hover {
-  background: rgba(39, 255, 138, 0.1);
-
+  background: rgba(39, 255, 138, 0.12);
+  border-color: #27ff8a;
   color: #27ff8a;
 
   transform: translateY(-2px);
 }
 
 .action-button:active {
-  transform: scale(0.92);
+  transform: scale(0.96);
 }
 
 .action-button svg {
+  width: 20px;
+  height: 20px;
+
   transition: transform 0.25s ease;
 }
 
 .action-button:hover svg {
-  transform: scale(1.15);
+  transform: scale(1.1);
 }

@@ -134,27 +134,26 @@ function Feed() {
                   </button>
 
                   <button
-                    className="action-button"
+                    className="comment-button"
                     onClick={() => {
                       setSelectedPost(post);
                       setCommentModalOpen(true);
                     }}
                   >
                     <MessageCircle size={18} />
-
                     <span>{commentCount}</span>
                   </button>
 
-                  <button className="action-button">
-                    <Repeat2 size={18} />
+                  <button className="action-button" aria-label="Repost">
+                    <Repeat2 size={20} />
                   </button>
 
-                  <button className="action-button">
-                    <Bookmark size={18} />
+                  <button className="action-button" aria-label="Save">
+                    <Bookmark size={20} />
                   </button>
 
-                  <button className="action-button">
-                    <Send size={18} />
+                  <button className="action-button" aria-label="Share">
+                    <Send size={20} />
                   </button>
                 </div>
               </div>

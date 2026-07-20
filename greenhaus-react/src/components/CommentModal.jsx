@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
-import { X, Send } from "lucide-react";
+import { X, Send, Trash2 } from "lucide-react";
 
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../context/AuthContext";
@@ -41,7 +41,11 @@ function CommentModal({ post, open, onClose, onCommentAdded }) {
   useEffect(() => {
     if (!open || !post) return;
 
-    void loadComments();
+    const fetchComments = async () => {
+      await loadComments();
+    };
+
+    void fetchComments();
 
     // Listen for new comments
     const channel = supabase
@@ -55,7 +59,7 @@ function CommentModal({ post, open, onClose, onCommentAdded }) {
           filter: `post_id=eq.${post.id}`,
         },
         () => {
-          loadComments();
+          void loadComments();
         },
       )
       .subscribe();
@@ -94,6 +98,24 @@ function CommentModal({ post, open, onClose, onCommentAdded }) {
     }
   }
 
+  async function handleDeleteComment(commentId) {
+    const { error } = await supabase
+      .from("comments")
+      .delete()
+      .eq("id", commentId);
+
+    if (error) {
+      console.error(error);
+      return;
+    }
+
+    await loadComments();
+
+    if (onCommentAdded) {
+      onCommentAdded();
+    }
+  }
+
   if (!open || !post) return null;
 
   return (
@@ -120,13 +142,36 @@ function CommentModal({ post, open, onClose, onCommentAdded }) {
           ) : (
             comments.map((comment) => (
               <div className="comment-card" key={comment.id}>
-                <strong>
-                  {comment.profiles?.display_name ||
-                    comment.profiles?.username ||
-                    "Unknown User"}
-                </strong>
+                <img
+                  src={comment.profiles?.avatar_url || "/default-avatar.png"}
+                  alt=""
+                  className="comment-avatar"
+                />
 
-                <p>{comment.content}</p>
+                <div className="comment-body">
+                  <div className="comment-header">
+                    <strong>
+                      {comment.profiles?.display_name ||
+                        comment.profiles?.username ||
+                        "Unknown User"}
+                    </strong>
+
+                    <small>
+                      {new Date(comment.created_at).toLocaleString()}
+                    </small>
+
+                    {comment.user_id === user.id && (
+                      <button
+                        className="delete-comment-btn"
+                        onClick={() => handleDeleteComment(comment.id)}
+                      >
+                        <Trash2 size={15} />
+                      </button>
+                    )}
+                  </div>
+
+                  <p>{comment.content}</p>
+                </div>
               </div>
             ))
           )}
