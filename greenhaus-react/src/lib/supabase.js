@@ -104,7 +104,13 @@ export async function fetchPosts() {
   ),
   comments (
     id
-  )
+  ),
+  reposts!reposts_post_id_fkey (
+    user_id
+  ),
+  saved_posts (
+    user_id
+)
 `,
     )
     .order("created_at", { ascending: false });
@@ -199,4 +205,123 @@ export async function toggleLike(postId, userId) {
   }
 
   return true;
+}
+
+/* REPOSTS */
+
+export async function toggleRepost(postId, userId) {
+  // Check if already reposted
+  const { data: existingRepost } = await supabase
+    .from("reposts")
+    .select("*")
+    .eq("post_id", postId)
+    .eq("user_id", userId)
+    .maybeSingle();
+
+  // Remove repost
+  if (existingRepost) {
+    const { error } = await supabase
+      .from("reposts")
+      .delete()
+      .eq("id", existingRepost.id);
+
+    if (error) {
+      console.error(error);
+      return false;
+    }
+
+    return false;
+  }
+
+  // Create repost
+  const { error } = await supabase.from("reposts").insert([
+    {
+      post_id: postId,
+      user_id: userId,
+    },
+  ]);
+
+  if (error) {
+    console.error(error);
+    return false;
+  }
+
+  return true;
+}
+
+export async function toggleSave(postId, userId) {
+  const { data: existingSave } = await supabase
+    .from("saved_posts")
+    .select("*")
+    .eq("post_id", postId)
+    .eq("user_id", userId)
+    .maybeSingle();
+
+  if (existingSave) {
+    const { error } = await supabase
+      .from("saved_posts")
+      .delete()
+      .eq("id", existingSave.id);
+
+    if (error) {
+      console.error(error);
+      return false;
+    }
+
+    return false;
+  }
+
+  const { error } = await supabase.from("saved_posts").insert([
+    {
+      post_id: postId,
+      user_id: userId,
+    },
+  ]);
+
+  if (error) {
+    console.error(error);
+    return false;
+  }
+
+  return true;
+}
+
+/* FETCH SAVED POSTS */
+
+export async function fetchSavedPosts(userId) {
+  const { data, error } = await supabase
+    .from("saved_posts")
+    .select(
+      `
+      post_id,
+      posts (
+        *,
+        profiles!posts_user_id_fkey (
+          username,
+          display_name,
+          avatar_url
+        ),
+        likes (
+          user_id
+        ),
+        comments (
+          id
+        ),
+        reposts (
+          user_id
+        ),
+        saved_posts (
+          user_id
+        )
+      )
+    `,
+    )
+    .eq("user_id", userId);
+
+  if (error) {
+    console.error(error);
+    return [];
+  }
+
+  return data.map((item) => item.posts);
 }

@@ -4,7 +4,14 @@ import { Heart, MessageCircle, Repeat2, Bookmark, Send } from "lucide-react";
 
 import CommentModal from "../components/CommentModal";
 
-import { supabase, createPost, fetchPosts, toggleLike } from "../lib/supabase";
+import {
+  supabase,
+  createPost,
+  fetchPosts,
+  toggleLike,
+  toggleRepost,
+  toggleSave,
+} from "../lib/supabase";
 
 import { useAuth } from "../context/AuthContext";
 
@@ -91,6 +98,12 @@ function Feed() {
 
             const commentCount = post.comments?.length || 0;
 
+            const repostCount = post.reposts?.length || 0;
+
+            const repostedByMe = post.reposts?.some(
+              (repost) => repost.user_id === user.id,
+            );
+
             return (
               <div className="post-card" key={post.id}>
                 <div className="post-header">
@@ -144,11 +157,30 @@ function Feed() {
                     <span>{commentCount}</span>
                   </button>
 
-                  <button className="action-button" aria-label="Repost">
+                  <button
+                    className={`action-button ${repostedByMe ? "reposted" : ""}`}
+                    aria-label="Repost"
+                    onClick={async () => {
+                      await toggleRepost(post.id, user.id);
+
+                      const updatedPosts = await fetchPosts();
+                      setPosts(updatedPosts);
+                    }}
+                  >
                     <Repeat2 size={20} />
+                    <span>{repostCount}</span>
                   </button>
 
-                  <button className="action-button" aria-label="Save">
+                  <button
+                    className={`action-button ${post.saved_posts?.some((save) => save.user_id === user.id) ? "saved" : ""}`}
+                    aria-label="Save"
+                    onClick={async () => {
+                      await toggleSave(post.id, user.id);
+
+                      const updatedPosts = await fetchPosts();
+                      setPosts(updatedPosts);
+                    }}
+                  >
                     <Bookmark size={20} />
                   </button>
 

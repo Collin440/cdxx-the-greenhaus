@@ -14,6 +14,8 @@ import Feed from "./pages/Feed";
 import Settings from "./pages/Settings";
 import Profile from "./pages/Profile";
 
+import Saved from "./pages/Saved";
+
 import Notifications from "./pages/Notifications";
 
 import "./App.css";
@@ -51,6 +53,8 @@ function App() {
           <Route path="messages" element={<Messages />} />
 
           <Route path="notifications" element={<Notifications />} />
+
+          <Route path="saved" element={<Saved />} />
 
           <Route path="settings" element={<Settings />} />
 
