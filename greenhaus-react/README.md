@@ -1,4 +1,4 @@
-CDXX: GreenHaus
+## CDXX: GreenHaus
 
 A modern social platform for the cannabis community built with React, Vite and Supabase.
 
