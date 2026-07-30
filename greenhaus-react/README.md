@@ -6,14 +6,14 @@ A modern social platform for the cannabis community built with React, Vite and S
 
 GreenHaus is a social media platform designed around the cannabis community. The goal is to provide a polished, modern experience where users can:
 
-Create posts
-Upload photos
-Like posts
-Comment on posts
-Repost content
-Save posts
-View profiles
-Receive notifications
+Create posts,
+Upload photos,
+Like posts,
+Comment on posts,
+Repost content,
+Save posts,
+View profiles,
+Receive notifications,
 Discover cannabis-friendly venues (in development)
 
 The project focuses heavily on clean UI, scalability and reusable React components.
@@ -68,3 +68,11 @@ Feed Refactor
 Multi-image rendering
 Feed image gallery
 Improved image lightbox
+
+## Author
+
+Collin Moleme
+
+Software Developer
+
+Johannesburg, South Africa
