@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Heart, MessageCircle, Repeat2, Bookmark, Send } from "lucide-react";
-
+import PostCard from "../components/feed/PostCard";
 import CommentModal from "../components/CommentModal";
+import { ImagePlus } from "lucide-react";
+import ImageLightbox from "../components/ImageLightbox";
 
 import {
   supabase,
@@ -20,10 +21,16 @@ import "./Feed.css";
 function Feed() {
   const [postText, setPostText] = useState("");
 
+  const [selectedImages, setSelectedImages] = useState([]);
+
   const [posts, setPosts] = useState([]);
 
   const [selectedPost, setSelectedPost] = useState(null);
   const [commentModalOpen, setCommentModalOpen] = useState(false);
+
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+
+  const [lightboxImage, setLightboxImage] = useState(null);
 
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -40,7 +47,12 @@ function Feed() {
   async function handlePost() {
     if (!postText.trim()) return;
 
-    const newPost = await createPost(user.id, postText);
+    const newPost = await createPost(user.id, postText, selectedImages);
+
+    console.log("Posting...");
+    console.log(selectedImages);
+
+    console.log(newPost);
 
     if (newPost) {
       // Create notification
@@ -63,9 +75,9 @@ function Feed() {
       console.log("Notification Data:", data);
       console.log("Notification Error:", error);
 
-      const updatedPosts = await fetchPosts();
-      setPosts(updatedPosts);
+      await refreshPosts();
       setPostText("");
+      setSelectedImages([]);
     }
   }
 
@@ -86,111 +98,70 @@ function Feed() {
             onChange={(e) => setPostText(e.target.value)}
           />
 
+          <div className="image-upload">
+            <label htmlFor="post-image" className="upload-button">
+              <ImagePlus size={18} />
+              <span>Add Photo</span>
+            </label>
+
+            <input
+              id="post-image"
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={(e) => {
+                setSelectedImages(Array.from(e.target.files));
+              }}
+              hidden
+            />
+
+            {selectedImages.length > 0 && (
+              <div className="selected-files">
+                {selectedImages.length > 0 && (
+                  <span className="selected-file">
+                    📷 {selectedImages.length} image
+                    {selectedImages.length > 1 ? "s" : ""} selected
+                  </span>
+                )}
+              </div>
+            )}
+          </div>
+
           <button onClick={handlePost}>Post</button>
         </div>
 
         <div className="feed-posts">
-          {posts.map((post) => {
-            const likeCount = post.likes?.length || 0;
-            const likedByMe = post.likes?.some(
-              (like) => like.user_id === user.id,
-            );
-
-            const commentCount = post.comments?.length || 0;
-
-            const repostCount = post.reposts?.length || 0;
-
-            const repostedByMe = post.reposts?.some(
-              (repost) => repost.user_id === user.id,
-            );
-
-            return (
-              <div className="post-card" key={post.id}>
-                <div className="post-header">
-                  <h3
-                    style={{
-                      cursor: "pointer",
-                      color: "#67ffb3",
-                    }}
-                    onClick={() => navigate(`/app/profile/${post.user_id}`)}
-                  >
-                    {post.profiles?.display_name ||
-                      post.profiles?.username ||
-                      "Unknown User"}
-                  </h3>
-
-                  <span>{new Date(post.created_at).toLocaleString()}</span>
-                </div>
-
-                <p className="post-content">{post.content}</p>
-
-                {post.image_url && (
-                  <img src={post.image_url} alt="post" className="post-image" />
-                )}
-
-                <div className="post-actions">
-                  <button
-                    className={`like-button ${likedByMe ? "liked" : ""}`}
-                    onClick={async () => {
-                      await toggleLike(post.id, user.id);
-
-                      const updatedPosts = await fetchPosts();
-                      setPosts(updatedPosts);
-                    }}
-                  >
-                    <Heart
-                      size={18}
-                      strokeWidth={2}
-                      fill={likedByMe ? "currentColor" : "none"}
-                    />
-                    <span>{likeCount}</span>
-                  </button>
-
-                  <button
-                    className="comment-button"
-                    onClick={() => {
-                      setSelectedPost(post);
-                      setCommentModalOpen(true);
-                    }}
-                  >
-                    <MessageCircle size={18} />
-                    <span>{commentCount}</span>
-                  </button>
-
-                  <button
-                    className={`action-button ${repostedByMe ? "reposted" : ""}`}
-                    aria-label="Repost"
-                    onClick={async () => {
-                      await toggleRepost(post.id, user.id);
-
-                      const updatedPosts = await fetchPosts();
-                      setPosts(updatedPosts);
-                    }}
-                  >
-                    <Repeat2 size={20} />
-                    <span>{repostCount}</span>
-                  </button>
-
-                  <button
-                    className={`action-button ${post.saved_posts?.some((save) => save.user_id === user.id) ? "saved" : ""}`}
-                    aria-label="Save"
-                    onClick={async () => {
-                      await toggleSave(post.id, user.id);
-
-                      const updatedPosts = await fetchPosts();
-                      setPosts(updatedPosts);
-                    }}
-                  >
-                    <Bookmark size={20} />
-                  </button>
-
-                  <button className="action-button" aria-label="Share">
-                    <Send size={20} />
-                  </button>
-                </div>
-              </div>
-            );
-          })}
+          {posts.map((post) => (
+            <PostCard
+              key={post.id}
+              post={post}
+              user={user}
+              onProfileClick={() => navigate(`/app/profile/${post.user_id}`)}
+              onLike={async () => {
+                await toggleLike(post.id, user.id);
+                refreshPosts();
+              }}
+              onComment={() => {
+                setSelectedPost(post);
+                setCommentModalOpen(true);
+              }}
+              onRepost={async () => {
+                await toggleRepost(post.id, user.id);
+                refreshPosts();
+              }}
+              onSave={async () => {
+                await toggleSave(post.id, user.id);
+                refreshPosts();
+              }}
+              onShare={() => {
+                console.log("Share clicked");
+              }}
+              onImageClick={(image) => {
+                setLightboxImage(image);
+                setLightboxOpen(true);
+              }}
+            />
+          ))}
         </div>
       </div>
 
@@ -201,9 +172,15 @@ function Feed() {
           setCommentModalOpen(false);
           setSelectedPost(null);
         }}
-        onCommentAdded={async () => {
-          const updatedPosts = await fetchPosts();
-          setPosts(updatedPosts);
+        onCommentAdded={refreshPosts}
+      />
+
+      <ImageLightbox
+        open={lightboxOpen}
+        image={lightboxImage}
+        onClose={() => {
+          setLightboxOpen(false);
+          setLightboxImage(null);
         }}
       />
     </>

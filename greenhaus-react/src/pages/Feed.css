@@ -66,6 +66,8 @@
   padding: 1.5rem;
 
   border: 1px solid rgba(255, 255, 255, 0.06);
+
+  overflow: hidden;
 }
 
 .feed-posts {
@@ -110,8 +112,26 @@
 
 .post-image {
   width: 100%;
-  border-radius: 14px;
-  margin-top: 15px;
+  max-height: 600px;
+  object-fit: cover;
+
+  border-radius: 18px;
+
+  margin-top: 14px;
+
+  display: block;
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  transition: transform 0.25s ease;
+
+  cursor: zoom-in;
+
+  transition: transform 0.2s ease;
+}
+
+.post-image:hover {
+  transform: scale(1.01);
 }
 
 /* =========================
@@ -282,4 +302,39 @@
 
 .action-button:hover svg {
   transform: scale(1.1);
+}
+
+.image-upload {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.upload-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 10px 18px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  color: #67ffb3;
+  cursor: pointer;
+  transition: 0.25s ease;
+  font-weight: 600;
+}
+
+.upload-button:hover {
+  background: rgba(103, 255, 179, 0.15);
+  border-color: #67ffb3;
+}
+
+.selected-file {
+  color: #67ffb3;
+  font-size: 0.9rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

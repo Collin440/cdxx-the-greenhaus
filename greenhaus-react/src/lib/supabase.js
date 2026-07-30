@@ -60,69 +60,120 @@ export async function loginUser(email, password) {
 
 /* CREATE POST */
 
-export async function createPost(userId, content) {
-  console.log("USER ID:", userId);
-  console.log("CONTENT:", content);
+export async function createPost(userId, content, imageFiles = []) {
+  console.log("===== CREATE POST =====");
+  console.log("User:", userId);
+  console.log("Content:", content);
+  console.log("Files:", imageFiles);
 
-  const { data, error } = await supabase
+  const { data: post, error: postError } = await supabase
     .from("posts")
-    .insert([
-      {
-        user_id: userId,
-        content: content,
-      },
-    ])
-    .select();
+    .insert({
+      user_id: userId,
+      content,
+    })
+    .select()
+    .single();
 
-  console.log("DATA:", data);
-  console.log("ERROR:", error);
-
-  if (error) {
-    console.error(error);
-
+  if (postError) {
+    console.error("POST ERROR:", postError);
     return null;
   }
 
-  return data[0];
+  console.log("Created post:", post.id);
+
+  if (!imageFiles || imageFiles.length === 0) {
+    console.log("No images received.");
+    return post;
+  }
+
+  for (const file of imageFiles) {
+    console.log("Uploading:", file);
+
+    const extension = file.name.split(".").pop();
+
+    const fileName = `${userId}/${post.id}/${crypto.randomUUID()}.${extension}`;
+
+    const { data: uploadData, error: uploadError } = await supabase.storage
+      .from("POSTS")
+      .upload(fileName, file);
+
+    console.log("UPLOAD DATA:", uploadData);
+    console.log("UPLOAD ERROR:", uploadError);
+
+    if (uploadError) {
+      console.error("UPLOAD ERROR:", uploadError);
+      continue;
+    }
+
+    console.log("Upload successful.");
+
+    const { data: publicUrlData } = supabase.storage
+      .from("POSTS")
+      .getPublicUrl(fileName);
+
+    console.log("Public URL:", publicUrlData.publicUrl);
+
+    const { data: insertedImage, error: imageError } = await supabase
+      .from("post_images")
+      .insert({
+        post_id: post.id,
+        image_url: publicUrlData.publicUrl,
+      })
+      .select();
+
+    console.log("INSERTED IMAGE:", insertedImage);
+    console.log("IMAGE ERROR:", imageError);
+
+    if (imageError) {
+      console.error("IMAGE INSERT ERROR:", imageError);
+    } else {
+      console.log("Image inserted.");
+    }
+  }
+
+  return post;
 }
 
 /* FETCH POSTS */
 
 export async function fetchPosts() {
-  const { data, error } = await supabase
+  const { data: posts, error: postsError } = await supabase
     .from("posts")
     .select(
       `
-  *,
-  profiles!posts_user_id_fkey (
-    username,
-    display_name,
-    avatar_url
-  ),
-  likes (
-    user_id
-  ),
-  comments (
-    id
-  ),
-  reposts!reposts_post_id_fkey (
-    user_id
-  ),
-  saved_posts (
-    user_id
-)
-`,
+      *,
+      profiles!posts_user_id_fkey(
+        username,
+        display_name,
+        avatar_url
+      ),
+      likes(user_id),
+      comments(id),
+      reposts!reposts_post_id_fkey(user_id),
+      saved_posts(user_id)
+    `,
     )
     .order("created_at", { ascending: false });
 
-  if (error) {
-    console.error("FETCH ERROR:", error);
+  if (postsError) {
+    console.error(postsError);
     return [];
   }
 
-  console.log("POSTS:", JSON.stringify(data, null, 2));
+  const { data: images, error: imageError } = await supabase
+    .from("post_images")
+    .select("*");
 
-  return data;
+  if (imageError) {
+    console.error(imageError);
+    return posts;
+  }
+
+  return posts.map((post) => ({
+    ...post,
+    post_images: images.filter((img) => img.post_id === post.id),
+  }));
 }
 
 /* LIKES */
