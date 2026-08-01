@@ -61,11 +61,6 @@ export async function loginUser(email, password) {
 /* CREATE POST */
 
 export async function createPost(userId, content, imageFiles = []) {
-  console.log("===== CREATE POST =====");
-  console.log("User:", userId);
-  console.log("Content:", content);
-  console.log("Files:", imageFiles);
-
   const { data: post, error: postError } = await supabase
     .from("posts")
     .insert({
@@ -76,59 +71,44 @@ export async function createPost(userId, content, imageFiles = []) {
     .single();
 
   if (postError) {
-    console.error("POST ERROR:", postError);
+    console.error(postError);
     return null;
   }
 
-  console.log("Created post:", post.id);
+  if (imageFiles.length > 0) {
+    const imageRows = [];
 
-  if (!imageFiles || imageFiles.length === 0) {
-    console.log("No images received.");
-    return post;
-  }
+    await Promise.all(
+      imageFiles.map(async (file) => {
+        const extension = file.name.split(".").pop();
 
-  for (const file of imageFiles) {
-    console.log("Uploading:", file);
+        const fileName = `${userId}/${post.id}/${crypto.randomUUID()}.${extension}`;
 
-    const extension = file.name.split(".").pop();
+        const { error: uploadError } = await supabase.storage
+          .from("posts")
+          .upload(fileName, file);
 
-    const fileName = `${userId}/${post.id}/${crypto.randomUUID()}.${extension}`;
+        if (uploadError) {
+          throw uploadError;
+        }
 
-    const { data: uploadData, error: uploadError } = await supabase.storage
-      .from("POSTS")
-      .upload(fileName, file);
+        const {
+          data: { publicUrl },
+        } = supabase.storage.from("posts").getPublicUrl(fileName);
 
-    console.log("UPLOAD DATA:", uploadData);
-    console.log("UPLOAD ERROR:", uploadError);
+        imageRows.push({
+          post_id: post.id,
+          image_url: publicUrl,
+        });
+      }),
+    );
 
-    if (uploadError) {
-      console.error("UPLOAD ERROR:", uploadError);
-      continue;
-    }
-
-    console.log("Upload successful.");
-
-    const { data: publicUrlData } = supabase.storage
-      .from("POSTS")
-      .getPublicUrl(fileName);
-
-    console.log("Public URL:", publicUrlData.publicUrl);
-
-    const { data: insertedImage, error: imageError } = await supabase
+    const { error: imageError } = await supabase
       .from("post_images")
-      .insert({
-        post_id: post.id,
-        image_url: publicUrlData.publicUrl,
-      })
-      .select();
-
-    console.log("INSERTED IMAGE:", insertedImage);
-    console.log("IMAGE ERROR:", imageError);
+      .insert(imageRows);
 
     if (imageError) {
-      console.error("IMAGE INSERT ERROR:", imageError);
-    } else {
-      console.log("Image inserted.");
+      throw imageError;
     }
   }
 
