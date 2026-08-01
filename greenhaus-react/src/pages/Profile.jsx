@@ -36,6 +36,10 @@ function Profile() {
 
   const [posts, setPosts] = useState([]);
 
+  const mediaPosts = posts.filter(
+    (post) => post.post_images && post.post_images.length > 0,
+  );
+
   const [profileCompletion, setProfileCompletion] = useState(0);
   const [showEditModal, setShowEditModal] = useState(false);
   const [editDisplayName, setEditDisplayName] = useState("");
@@ -116,13 +120,27 @@ function Profile() {
       console.log("Following Count:", following);
       setFollowingCount(following || 0);
 
-      const { data: userPosts } = await supabase
+      const { data: userPosts, error: postsError } = await supabase
         .from("posts")
-        .select("*")
+        .select(
+          `
+    *,
+    post_images(*),
+    likes(user_id),
+    comments(id)
+  `,
+        )
         .eq("user_id", profileId)
         .order("created_at", { ascending: false });
 
-      setPosts(userPosts || []);
+      if (postsError) {
+        console.error(postsError);
+      } else {
+        console.log("PROFILE POSTS:", userPosts);
+        setPosts(userPosts || []);
+      }
+
+      console.log("FIRST POST:", userPosts?.[0]);
 
       let completion = 0;
 
@@ -538,9 +556,9 @@ function Profile() {
               className="profile-post-tile"
               onClick={() => setSelectedPost(post)}
             >
-              {post.image_url ? (
+              {post.post_images?.length > 0 ? (
                 <img
-                  src={post.image_url}
+                  src={post.post_images[0].image_url}
                   alt=""
                   className="profile-post-image"
                 />
@@ -554,12 +572,12 @@ function Profile() {
                 <div className="overlay-stats">
                   <span className="overlay-stat">
                     <Heart size={18} fill="currentColor" />
-                    {post.likes ?? 0}
+                    {Array.isArray(post.likes) ? post.likes.length : 0}
                   </span>
 
                   <span className="overlay-stat">
                     <MessageCircle size={18} />
-                    {post.comments?.length ?? 0}
+                    {Array.isArray(post.comments) ? post.comments.length : 0}
                   </span>
                 </div>
               </div>
@@ -568,13 +586,13 @@ function Profile() {
         </div>
       ) : (
         <div className="profile-grid">
-          {posts.map((post) => (
+          {mediaPosts.map((post) => (
             <div key={post.id} className="profile-grid-item">
-              {post.image_url ? (
+              {post.post_images?.length > 0 ? (
                 <img
-                  src={post.image_url}
+                  src={post.post_images[0].image_url}
                   alt=""
-                  className="profile-grid-image"
+                  className="profile-post-image"
                 />
               ) : (
                 <div className="profile-grid-text">
@@ -792,9 +810,9 @@ function Profile() {
             </button>
 
             <div className="post-modal-media">
-              {selectedPost.image_url ? (
+              {selectedPost.post_images?.length > 0 ? (
                 <img
-                  src={selectedPost.image_url}
+                  src={selectedPost.post_images[0].image_url}
                   alt=""
                   className="post-modal-image"
                 />
