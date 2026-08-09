@@ -40,6 +40,10 @@ function Profile() {
     (post) => post.post_images && post.post_images.length > 0,
   );
 
+  const likedPosts = posts.filter((post) =>
+    post.likes?.some((like) => like.user_id === user?.id),
+  );
+
   const [profileCompletion, setProfileCompletion] = useState(0);
   const [showEditModal, setShowEditModal] = useState(false);
   const [editDisplayName, setEditDisplayName] = useState("");
@@ -539,13 +543,6 @@ function Profile() {
         >
           Likes
         </button>
-
-        <button
-          className={activeTab === "saved" ? "active-tab" : ""}
-          onClick={() => setActiveTab("saved")}
-        >
-          Saved
-        </button>
       </div>
 
       {activeTab === "posts" ? (
@@ -584,10 +581,32 @@ function Profile() {
             </div>
           ))}
         </div>
-      ) : (
+      ) : activeTab === "media" ? (
         <div className="profile-grid">
           {mediaPosts.map((post) => (
             <div key={post.id} className="profile-grid-item">
+              {post.post_images?.length > 0 ? (
+                <img
+                  src={post.post_images[0].image_url}
+                  alt=""
+                  className="profile-post-image"
+                />
+              ) : (
+                <div className="profile-grid-text">
+                  <p>{post.content}</p>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="profile-grid">
+          {likedPosts.map((post) => (
+            <div
+              key={post.id}
+              className="profile-grid-item"
+              onClick={() => setSelectedPost(post)}
+            >
               {post.post_images?.length > 0 ? (
                 <img
                   src={post.post_images[0].image_url}

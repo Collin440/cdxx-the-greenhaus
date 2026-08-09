@@ -332,6 +332,9 @@ export async function fetchSavedPosts(userId) {
           display_name,
           avatar_url
         ),
+        post_images (
+        *
+        ),
         likes (
           user_id
         ),

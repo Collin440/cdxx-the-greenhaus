@@ -1430,3 +1430,76 @@
 .comment-send-btn:hover {
   background: #2bff9c;
 }
+
+/* =========================================
+   MEDIA / LIKES GRID
+========================================= */
+
+.profile-grid {
+  width: 100%;
+  margin-top: 30px;
+
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.profile-grid-item {
+  position: relative;
+  aspect-ratio: 1;
+
+  background: #08281b;
+  border-radius: 18px;
+  overflow: hidden;
+
+  cursor: pointer;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.profile-grid-item:hover {
+  transform: translateY(-6px);
+
+  box-shadow:
+    0 10px 35px rgba(0, 0, 0, 0.35),
+    0 0 18px rgba(0, 255, 120, 0.25);
+}
+
+.profile-grid-item .profile-post-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+
+  transition: transform 0.35s ease;
+}
+
+.profile-grid-item:hover .profile-post-image {
+  transform: scale(1.08);
+}
+
+.profile-grid-text {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 30px;
+
+  text-align: center;
+  color: white;
+  line-height: 1.7;
+
+  background: linear-gradient(
+    145deg,
+    rgba(0, 255, 120, 0.06),
+    rgba(255, 255, 255, 0.02)
+  );
+}
