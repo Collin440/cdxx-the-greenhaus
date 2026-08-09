@@ -36,7 +36,7 @@ function CommentModal({ post, open, onClose, onCommentAdded }) {
     }
 
     setComments(data);
-  }, [post]);
+  }, [post, user]);
 
   useEffect(() => {
     if (!open || !post) return;
@@ -72,21 +72,52 @@ function CommentModal({ post, open, onClose, onCommentAdded }) {
   async function handleComment() {
     if (!commentText.trim()) return;
 
-    const { data, error } = await supabase
-      .from("comments")
-      .insert([
-        {
-          post_id: post.id,
-          user_id: user.id,
-          content: commentText,
-        },
-      ])
-      .select()
-      .single();
+    const { error } = await supabase.from("comments").insert([
+      {
+        post_id: post.id,
+        user_id: user.id,
+        content: commentText.trim(),
+      },
+    ]);
 
     if (error) {
-      console.error(error);
+      console.error("COMMENT INSERT ERROR:", error);
       return;
+    }
+    console.log("COMMENT INSERT SUCCESS");
+
+    console.log("LOOKING FOR POST OWNER:", post.id);
+
+    // Find the owner of the post
+    const { data: postOwner, error: postOwnerError } = await supabase
+      .from("posts")
+      .select("user_id")
+      .eq("id", post.id)
+      .single();
+
+    if (postOwnerError) {
+      console.error("POST OWNER ERROR:", postOwnerError);
+    } else if (postOwner.user_id !== user.id) {
+      console.log("INSERTING COMMENT NOTIFICATION:", {
+        user_id: postOwner.user_id,
+        actor_id: user.id,
+        post_id: post.id,
+      });
+      const { error: notificationError } = await supabase
+        .from("notifications")
+        .insert([
+          {
+            user_id: postOwner.user_id,
+            actor_id: user.id,
+            post_id: post.id,
+            type: "comment",
+            is_read: false,
+          },
+        ]);
+
+      if (notificationError) {
+        console.error("COMMENT NOTIFICATION ERROR:", notificationError);
+      }
     }
 
     setCommentText("");

@@ -179,24 +179,18 @@ export async function toggleLike(postId, userId) {
       return false;
     }
 
-    if (!error) {
-      const { data: post } = await supabase
-        .from("posts")
-        .select("user_id")
-        .eq("id", postId)
-        .single();
+    if (existingLike) {
+      const { error } = await supabase
+        .from("likes")
+        .delete()
+        .eq("id", existingLike.id);
 
-      if (post.user_id !== userId) {
-        await supabase.from("notifications").insert([
-          {
-            user_id: post.user_id,
-            actor_id: userId,
-            post_id: postId,
-            type: "like",
-            is_read: false,
-          },
-        ]);
+      if (error) {
+        console.error(error);
+        return false;
       }
+
+      return false;
     }
 
     return false;
@@ -275,6 +269,26 @@ export async function toggleRepost(postId, userId) {
   if (error) {
     console.error(error);
     return false;
+  }
+
+  // Find who owns the post
+  const { data: post } = await supabase
+    .from("posts")
+    .select("user_id")
+    .eq("id", postId)
+    .single();
+
+  // Don't notify yourself
+  if (post && post.user_id !== userId) {
+    await supabase.from("notifications").insert([
+      {
+        user_id: post.user_id,
+        actor_id: userId,
+        post_id: postId,
+        type: "repost",
+        is_read: false,
+      },
+    ]);
   }
 
   return true;
