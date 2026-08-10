@@ -130,7 +130,16 @@ export async function fetchPosts() {
       ),
       likes(user_id),
       comments(id),
-      reposts!reposts_post_id_fkey(user_id),
+      reposts!reposts_post_id_fkey(
+        id,
+        user_id,
+        created_at,
+      profiles!reposts_user_id_fkey(
+        username,
+        display_name,
+        avatar_url
+       )
+      ),
       saved_posts(user_id)
     `,
     )
@@ -235,6 +244,23 @@ export async function toggleLike(postId, userId) {
 /* REPOSTS */
 
 export async function toggleRepost(postId, userId) {
+  // Find who owns the post
+  const { data: post, error: postError } = await supabase
+    .from("posts")
+    .select("user_id")
+    .eq("id", postId)
+    .single();
+
+  if (postError) {
+    console.error("REPOST POST LOOKUP ERROR:", postError);
+    return false;
+  }
+
+  // Prevent users from reposting their own posts
+  if (post.user_id === userId) {
+    return false;
+  }
+
   // Check if already reposted
   const { data: existingRepost } = await supabase
     .from("reposts")
@@ -271,13 +297,7 @@ export async function toggleRepost(postId, userId) {
     return false;
   }
 
-  // Find who owns the post
-  const { data: post } = await supabase
-    .from("posts")
-    .select("user_id")
-    .eq("id", postId)
-    .single();
-
+  // Find who owns the post (already queried above, but kept for clarity)
   // Don't notify yourself
   if (post && post.user_id !== userId) {
     await supabase.from("notifications").insert([

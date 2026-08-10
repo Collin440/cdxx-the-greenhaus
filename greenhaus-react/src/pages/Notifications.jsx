@@ -16,7 +16,7 @@ function Notifications() {
         return "Commented on your post";
 
       case "repost":
-        return "Reposted your post";
+        return "Sprouted your post";
 
       case "follow":
         return "Started following you";

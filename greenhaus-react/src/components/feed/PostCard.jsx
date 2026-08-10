@@ -1,4 +1,4 @@
-import { Heart, MessageCircle, Repeat2, Bookmark, Send } from "lucide-react";
+import { Heart, MessageCircle, Sprout, Bookmark, Send } from "lucide-react";
 
 import "./PostCard.css";
 
@@ -12,6 +12,7 @@ function PostCard({
   onShare,
   onProfileClick,
   onImageClick,
+  sproutedBy,
 }) {
   const likeCount = post.likes?.length || 0;
   const likedByMe = post.likes?.some((like) => like.user_id === user.id);
@@ -24,13 +25,44 @@ function PostCard({
     (repost) => repost.user_id === user.id,
   );
 
+  const latestSprout = sproutedBy?.length
+    ? [...sproutedBy].sort(
+        (a, b) => new Date(b.created_at) - new Date(a.created_at),
+      )[0]
+    : null;
+
   const savedByMe = post.saved_posts?.some((save) => save.user_id === user.id);
 
   console.log("POST:", post.id);
   console.log("POST IMAGES:", post.post_images);
 
+  {
+    latestSprout?.profiles && (
+      <div className="sprout-indicator">
+        <Sprout size={15} />
+        <span>
+          {latestSprout.profiles.display_name ||
+            latestSprout.profiles.username ||
+            "Someone"}{" "}
+          sprouted this
+        </span>
+      </div>
+    );
+  }
+
   return (
     <div className="post-card">
+      {latestSprout?.profiles && (
+        <div className="sprout-indicator">
+          <Sprout size={15} />
+          <span>
+            {latestSprout.profiles.display_name ||
+              latestSprout.profiles.username ||
+              "Someone"}{" "}
+            sprouted this
+          </span>
+        </div>
+      )}
       <div className="post-header">
         <h3
           style={{
@@ -77,29 +109,25 @@ function PostCard({
 
           <span>{likeCount}</span>
         </button>
-
         <button className="comment-button" onClick={onComment}>
           <MessageCircle size={18} />
 
           <span>{commentCount}</span>
         </button>
-
         <button
           className={`action-button ${repostedByMe ? "reposted" : ""}`}
           onClick={onRepost}
         >
-          <Repeat2 size={20} />
+          <Sprout size={20} />
 
           <span>{repostCount}</span>
         </button>
-
         <button
           className={`action-button ${savedByMe ? "saved" : ""}`}
           onClick={onSave}
         >
           <Bookmark size={20} />
         </button>
-
         <button className="action-button" onClick={onShare}>
           <Send size={20} />
         </button>

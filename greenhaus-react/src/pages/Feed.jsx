@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import PostCard from "../components/feed/PostCard";
 import CommentModal from "../components/CommentModal";
+import ShareModal from "../components/ShareModal";
 import { ImagePlus } from "lucide-react";
 import ImageLightbox from "../components/ImageLightbox";
 
@@ -29,8 +30,10 @@ function Feed() {
   const [commentModalOpen, setCommentModalOpen] = useState(false);
 
   const [lightboxOpen, setLightboxOpen] = useState(false);
-
   const [lightboxImage, setLightboxImage] = useState(null);
+
+  const [shareModalOpen, setShareModalOpen] = useState(false);
+  const [selectedSharePost, setSelectedSharePost] = useState(null);
 
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -136,6 +139,7 @@ function Feed() {
               key={post.id}
               post={post}
               user={user}
+              sproutedBy={post.reposts}
               onProfileClick={() => navigate(`/app/profile/${post.user_id}`)}
               onLike={async () => {
                 await toggleLike(post.id, user.id);
@@ -154,7 +158,8 @@ function Feed() {
                 refreshPosts();
               }}
               onShare={() => {
-                console.log("Share clicked");
+                setSelectedSharePost(post);
+                setShareModalOpen(true);
               }}
               onImageClick={(image) => {
                 setLightboxImage(image);
@@ -181,6 +186,14 @@ function Feed() {
         onClose={() => {
           setLightboxOpen(false);
           setLightboxImage(null);
+        }}
+      />
+      <ShareModal
+        post={selectedSharePost}
+        open={shareModalOpen}
+        onClose={() => {
+          setShareModalOpen(false);
+          setSelectedSharePost(null);
         }}
       />
     </>
