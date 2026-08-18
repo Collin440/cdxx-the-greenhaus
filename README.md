@@ -22,13 +22,27 @@
 
 ✅ Venue deletion with confirmation and real-time UI updates
 
+✅ Direct messaging system with Supabase database integration
+
+✅ Real-time message delivery without page refresh
+
+✅ Conversation history loaded from the database
+
+✅ Conversation list with latest message previews
+
+✅ Searchable user list for starting new conversations
+
+✅ Read/unread message tracking
+
+✅ Automatic message timestamps
+
+✅ Scrollable conversation message panel
+
 ---
 
 ### Screenshot
-<img width="1187" height="932" alt="WhatsApp Image 2026-07-10 at 13 51 05" src="https://github.com/user-attachments/assets/032b95fb-c82d-4060-9b12-8c3588eae312" />
-<img width="911" height="827" alt="WhatsApp Image 2026-07-10 at 14 00 54" src="https://github.com/user-attachments/assets/2486a0a1-ca67-437e-9ee5-4177fa30b287" />
+<img width="1482" height="993" alt="image" src="https://github.com/user-attachments/assets/11c8cc48-5edf-43ed-b19f-726dba5e3e51" />
 
----
 
 ### Latest Features
 
@@ -37,3 +51,10 @@
 - feat(venues): venue details modal
 - feat(venues): Google Maps integration
 - feat(venues): delete venues with Supabase sync
+- feat(messages): Supabase messaging system
+- feat(messages): real-time message delivery
+- feat(messages): conversation history and latest message previews
+- feat(messages): searchable user conversations
+- feat(messages): read/unread message tracking
+- feat(messages): automatic message timestamps
+- feat(messages): scrollable conversation panel
