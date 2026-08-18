@@ -1,0 +1,262 @@
+.messages-page {
+  min-height: 100%;
+  padding: 32px;
+}
+
+.messages-container {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  min-height: 650px;
+  border: 1px solid rgba(103, 255, 179, 0.2);
+  border-radius: 20px;
+  overflow: hidden;
+  background: rgba(0, 35, 25, 0.7);
+}
+
+.messages-sidebar {
+  border-right: 1px solid rgba(103, 255, 179, 0.15);
+}
+
+.messages-sidebar-header {
+  padding: 24px;
+}
+
+.messages-sidebar-header h1 {
+  margin: 0 0 18px;
+}
+
+.new-message-button,
+.empty-conversations button {
+  border: 1px solid #22ff88;
+  background: rgba(0, 70, 45, 0.6);
+  color: #67ffb3;
+  border-radius: 10px;
+  padding: 10px 14px;
+  cursor: pointer;
+}
+
+.message-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 20px 16px;
+  padding: 10px 12px;
+  border: 1px solid rgba(103, 255, 179, 0.2);
+  border-radius: 10px;
+}
+
+.message-search input {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: white;
+}
+
+.conversation-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  border: 0;
+  border-bottom: 1px solid rgba(103, 255, 179, 0.08);
+  background: transparent;
+  color: white;
+  text-align: left;
+  cursor: pointer;
+}
+
+.conversation-item:hover {
+  background: rgba(103, 255, 179, 0.08);
+}
+
+.conversation-item img,
+.message-header img {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid #22ff88;
+}
+
+.conversation-item div {
+  min-width: 0;
+}
+
+.conversation-item strong,
+.conversation-item span {
+  display: block;
+}
+
+.conversation-item span {
+  margin-top: 4px;
+  color: #9ab8aa;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.back-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 14px 20px;
+  border: 0;
+  background: transparent;
+  color: #67ffb3;
+  cursor: pointer;
+}
+
+.empty-conversations {
+  padding: 30px 20px;
+  text-align: center;
+}
+
+.message-window {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.message-empty-state {
+  margin: auto;
+  text-align: center;
+  color: #9ab8aa;
+}
+
+.message-empty-state h2 {
+  color: white;
+}
+
+.message-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 24px;
+  border-bottom: 1px solid rgba(103, 255, 179, 0.15);
+}
+
+.message-header div span {
+  display: block;
+  margin-top: 3px;
+  color: #9ab8aa;
+}
+
+.message-list {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.message-bubble {
+  max-width: 65%;
+  padding: 10px 14px;
+  border-radius: 14px;
+}
+
+.message-bubble p {
+  margin: 0;
+}
+
+.message-bubble span {
+  display: block;
+  margin-top: 5px;
+  font-size: 11px;
+  opacity: 0.6;
+}
+
+.message-own {
+  align-self: flex-end;
+  background: #075b3c;
+}
+
+.message-other {
+  align-self: flex-start;
+  background: #062d22;
+}
+
+.message-input {
+  display: flex;
+  gap: 10px;
+  padding: 18px;
+  border-top: 1px solid rgba(103, 255, 179, 0.15);
+}
+
+.message-input input {
+  flex: 1;
+  padding: 13px 15px;
+  border: 1px solid rgba(103, 255, 179, 0.25);
+  border-radius: 12px;
+  outline: none;
+  background: rgba(0, 20, 15, 0.8);
+  color: white;
+}
+
+.message-input button {
+  width: 46px;
+  border: 0;
+  border-radius: 12px;
+  background: #16e878;
+  color: #001b10;
+  cursor: pointer;
+}
+
+.message-input button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+@media (max-width: 800px) {
+  .messages-container {
+    grid-template-columns: 1fr;
+  }
+
+  .messages-sidebar {
+    border-right: 0;
+  }
+}
+
+/* Messages scrolling */
+.messages-container {
+  height: 75vh;
+  min-height: 600px;
+}
+
+.message-window {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+}
+
+.message-list {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 24px;
+  scroll-behavior: smooth;
+}
+
+/* Scrollbar */
+.message-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.message-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.message-list::-webkit-scrollbar-thumb {
+  background: rgba(46, 255, 145, 0.35);
+  border-radius: 10px;
+}
+
+.message-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(46, 255, 145, 0.6);
+}

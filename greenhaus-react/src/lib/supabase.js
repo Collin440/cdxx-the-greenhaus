@@ -297,7 +297,6 @@ export async function toggleRepost(postId, userId) {
     return false;
   }
 
-  // Find who owns the post (already queried above, but kept for clarity)
   // Don't notify yourself
   if (post && post.user_id !== userId) {
     await supabase.from("notifications").insert([
@@ -392,4 +391,173 @@ export async function fetchSavedPosts(userId) {
   }
 
   return data.map((item) => item.posts);
+}
+
+/* MESSAGES */
+
+export async function sendMessage(senderId, recipientId, content) {
+  const trimmedContent = content.trim();
+
+  if (!trimmedContent) {
+    return null;
+  }
+
+  const { data, error } = await supabase
+    .from("messages")
+    .insert([
+      {
+        sender_id: senderId,
+        recipient_id: recipientId,
+        content: trimmedContent,
+      },
+    ])
+    .select()
+    .single();
+
+  if (error) {
+    console.error("Error sending message:", error);
+    return null;
+  }
+
+  return data;
+}
+
+export async function fetchConversation(userId, otherUserId) {
+  const { data, error } = await supabase
+    .from("messages")
+    .select("*")
+    .or(
+      `and(sender_id.eq.${userId},recipient_id.eq.${otherUserId}),and(sender_id.eq.${otherUserId},recipient_id.eq.${userId})`,
+    )
+    .order("created_at", { ascending: true });
+
+  if (error) {
+    console.error("Error fetching conversation:", error);
+    return [];
+  }
+
+  return data || [];
+}
+
+export async function markMessagesAsRead(userId, otherUserId) {
+  const { error } = await supabase
+    .from("messages")
+    .update({
+      read_at: new Date().toISOString(),
+    })
+    .eq("recipient_id", userId)
+    .eq("sender_id", otherUserId)
+    .is("read_at", null);
+
+  if (error) {
+    console.error("Error marking messages as read:", error);
+    return false;
+  }
+
+  return true;
+}
+
+export async function fetchConversations(userId) {
+  const { data: messages, error } = await supabase
+    .from("messages")
+    .select("*")
+    .or(`sender_id.eq.${userId},recipient_id.eq.${userId}`)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error("Error fetching conversations:", error);
+    return [];
+  }
+
+  if (!messages || messages.length === 0) {
+    return [];
+  }
+
+  // Get the other user's ID for each message
+  const conversationMap = new Map();
+
+  messages.forEach((message) => {
+    const otherUserId =
+      message.sender_id === userId ? message.recipient_id : message.sender_id;
+
+    if (!conversationMap.has(otherUserId)) {
+      conversationMap.set(otherUserId, {
+        userId: otherUserId,
+        latestMessage: message,
+        unreadCount: 0,
+      });
+    }
+
+    if (message.recipient_id === userId && message.read_at === null) {
+      conversationMap.get(otherUserId).unreadCount += 1;
+    }
+  });
+
+  const conversationUserIds = Array.from(conversationMap.keys());
+
+  if (conversationUserIds.length === 0) {
+    return [];
+  }
+
+  const { data: profiles, error: profilesError } = await supabase
+    .from("profiles")
+    .select("id, username, display_name, avatar_url")
+    .in("id", conversationUserIds);
+
+  if (profilesError) {
+    console.error("Error fetching conversation profiles:", profilesError);
+    return [];
+  }
+
+  return conversationUserIds.map((conversationUserId) => {
+    const conversation = conversationMap.get(conversationUserId);
+
+    const profile = profiles?.find(
+      (profile) => profile.id === conversationUserId,
+    );
+
+    return {
+      userId: conversationUserId,
+      profile: profile || null,
+      latestMessage: conversation.latestMessage,
+      unreadCount: conversation.unreadCount,
+    };
+  });
+}
+
+export async function fetchMessageableUsers(userId) {
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("id, username, display_name, avatar_url")
+    .neq("id", userId)
+    .order("display_name", { ascending: true });
+
+  if (error) {
+    console.error("Error fetching messageable users:", error);
+    return [];
+  }
+
+  return data || [];
+}
+
+export function subscribeToMessages(userId, onMessage) {
+  const channel = supabase
+    .channel(`messages:${userId}`)
+    .on(
+      "postgres_changes",
+      {
+        event: "INSERT",
+        schema: "public",
+        table: "messages",
+        filter: `recipient_id=eq.${userId}`,
+      },
+      (payload) => {
+        onMessage(payload.new);
+      },
+    )
+    .subscribe();
+
+  return () => {
+    supabase.removeChannel(channel);
+  };
 }
