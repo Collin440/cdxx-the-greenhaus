@@ -422,6 +422,19 @@ export async function sendMessage(senderId, recipientId, content) {
   return data;
 }
 
+export async function unsendMessage(messageId) {
+  const { data, error } = await supabase.rpc("unsend_message", {
+    p_message_id: messageId,
+  });
+
+  if (error) {
+    console.error("Error unsending message:", error);
+    return false;
+  }
+
+  return data === true;
+}
+
 export async function fetchConversation(userId, otherUserId) {
   const { data, error } = await supabase
     .from("messages")
@@ -436,7 +449,28 @@ export async function fetchConversation(userId, otherUserId) {
     return [];
   }
 
-  return data || [];
+  if (!data || data.length === 0) {
+    return [];
+  }
+
+  const messageIds = data.map((message) => message.id);
+
+  const { data: deletedMessages, error: deletionError } = await supabase
+    .from("message_deletions")
+    .select("message_id")
+    .eq("user_id", userId)
+    .in("message_id", messageIds);
+
+  if (deletionError) {
+    console.error("Error fetching deleted messages:", deletionError);
+    return data;
+  }
+
+  const deletedMessageIds = new Set(
+    (deletedMessages || []).map((item) => item.message_id),
+  );
+
+  return data.filter((message) => !deletedMessageIds.has(message.id));
 }
 
 export async function markMessagesAsRead(userId, otherUserId) {
@@ -473,10 +507,35 @@ export async function fetchConversations(userId) {
     return [];
   }
 
+  const messageIds = messages.map((message) => message.id);
+
+  const { data: deletedMessages, error: deletionError } = await supabase
+    .from("message_deletions")
+    .select("message_id")
+    .eq("user_id", userId)
+    .in("message_id", messageIds);
+
+  if (deletionError) {
+    console.error("Error fetching deleted messages:", deletionError);
+    return [];
+  }
+
+  const deletedMessageIds = new Set(
+    (deletedMessages || []).map((item) => item.message_id),
+  );
+
+  const visibleMessages = messages.filter(
+    (message) => !deletedMessageIds.has(message.id),
+  );
+
+  if (visibleMessages.length === 0) {
+    return [];
+  }
+
   // Get the other user's ID for each message
   const conversationMap = new Map();
 
-  messages.forEach((message) => {
+  visibleMessages.forEach((message) => {
     const otherUserId =
       message.sender_id === userId ? message.recipient_id : message.sender_id;
 
@@ -540,7 +599,7 @@ export async function fetchMessageableUsers(userId) {
   return data || [];
 }
 
-export function subscribeToMessages(userId, onMessage) {
+export function subscribeToMessages(userId, onMessage, onMessageUpdate) {
   const channel = supabase
     .channel(`messages:${userId}`)
     .on(
@@ -555,9 +614,80 @@ export function subscribeToMessages(userId, onMessage) {
         onMessage(payload.new);
       },
     )
+    .on(
+      "postgres_changes",
+      {
+        event: "UPDATE",
+        schema: "public",
+        table: "messages",
+        filter: `recipient_id=eq.${userId}`,
+      },
+      (payload) => {
+        if (onMessageUpdate) {
+          onMessageUpdate(payload.new);
+        }
+      },
+    )
     .subscribe();
 
   return () => {
     supabase.removeChannel(channel);
   };
+}
+
+export function subscribeToTyping(userId, otherUserId, onTypingChange) {
+  const conversationId = [userId, otherUserId].sort().join(":");
+
+  const channel = supabase.channel(`typing:${conversationId}`, {
+    config: {
+      presence: {
+        key: userId,
+      },
+    },
+  });
+
+  channel.on("presence", { event: "sync" }, () => {
+    const state = channel.presenceState();
+
+    const typingUsers = Object.entries(state)
+      .filter(([id]) => id !== userId)
+      .flatMap(([, presences]) => presences)
+      .filter((presence) => presence.is_typing === true);
+
+    onTypingChange(typingUsers.length > 0);
+  });
+
+  channel.subscribe(async (status) => {
+    if (status === "SUBSCRIBED") {
+      await channel.track({
+        is_typing: false,
+      });
+    }
+  });
+
+  return {
+    setTyping: async (isTyping) => {
+      await channel.track({
+        is_typing: isTyping,
+      });
+    },
+
+    unsubscribe: async () => {
+      await supabase.removeChannel(channel);
+    },
+  };
+}
+
+export async function deleteMessageForMe(messageId, userId) {
+  const { error } = await supabase.from("message_deletions").insert({
+    message_id: messageId,
+    user_id: userId,
+  });
+
+  if (error) {
+    console.error("Error deleting message for me:", error);
+    return false;
+  }
+
+  return true;
 }

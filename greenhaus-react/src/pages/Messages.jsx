@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   fetchConversations,
   fetchConversation,
@@ -6,6 +6,8 @@ import {
   sendMessage,
   markMessagesAsRead,
   subscribeToMessages,
+  subscribeToTyping,
+  unsendMessage,
 } from "../lib/supabase";
 import { useAuth } from "../context/AuthContext";
 import { Send, Search, ArrowLeft } from "lucide-react";
@@ -24,22 +26,30 @@ function Messages() {
   const [showNewMessage, setShowNewMessage] = useState(false);
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
+  const [isOtherUserTyping, setIsOtherUserTyping] = useState(false);
 
   const messageListRef = useRef(null);
+  const typingTimeoutRef = useRef(null);
+  const typingChannelRef = useRef(null);
+  const selectedUserRef = useRef(null);
 
-  async function loadConversations() {
+  useEffect(() => {
+    selectedUserRef.current = selectedUser;
+  }, [selectedUser]);
+
+  const loadConversations = useCallback(async () => {
     if (!user?.id) return;
 
     const data = await fetchConversations(user.id);
     setConversations(data);
-  }
+  }, [user]);
 
-  async function loadUsers() {
+  const loadUsers = useCallback(async () => {
     if (!user?.id) return;
 
     const data = await fetchMessageableUsers(user.id);
     setUsers(data);
-  }
+  }, [user]);
 
   async function openConversation(profile) {
     setSelectedUser(profile);
@@ -60,6 +70,15 @@ function Messages() {
 
     setSending(true);
 
+    if (typingChannelRef.current) {
+      await typingChannelRef.current.setTyping(false);
+    }
+
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+      typingTimeoutRef.current = null;
+    }
+
     const newMessage = await sendMessage(user.id, selectedUser.id, content);
 
     if (newMessage) {
@@ -69,6 +88,49 @@ function Messages() {
     }
 
     setSending(false);
+  }
+
+  async function handleUnsendMessage(messageId) {
+    const success = await unsendMessage(messageId);
+
+    if (!success) {
+      return;
+    }
+
+    setMessages((current) =>
+      current.filter((message) => message.id !== messageId),
+    );
+
+    await loadConversations();
+  }
+
+  function handleMessageInputChange(event) {
+    const value = event.target.value;
+
+    setMessageText(value);
+
+    if (!selectedUser) return;
+
+    const typingChannel = typingChannelRef.current;
+
+    if (!typingChannel) return;
+
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+    }
+
+    if (!value.trim()) {
+      typingChannel.setTyping(false);
+      typingTimeoutRef.current = null;
+      return;
+    }
+
+    typingChannel.setTyping(true);
+
+    typingTimeoutRef.current = setTimeout(() => {
+      typingChannel.setTyping(false);
+      typingTimeoutRef.current = null;
+    }, 1500);
   }
 
   useEffect(() => {
@@ -83,37 +145,76 @@ function Messages() {
     }
 
     loadMessages();
-  }, [user]);
+  }, [user?.id, loadConversations, loadUsers]);
 
   useEffect(() => {
     if (!user?.id) return;
 
-    const unsubscribe = subscribeToMessages(user.id, (newMessage) => {
-      const belongsToSelectedConversation =
-        selectedUser &&
-        ((newMessage.sender_id === selectedUser.id &&
-          newMessage.recipient_id === user.id) ||
-          (newMessage.sender_id === user.id &&
-            newMessage.recipient_id === selectedUser.id));
+    const unsubscribe = subscribeToMessages(
+      user.id,
+      (newMessage) => {
+        const belongsToSelectedConversation =
+          selectedUser &&
+          ((newMessage.sender_id === selectedUser.id &&
+            newMessage.recipient_id === user.id) ||
+            (newMessage.sender_id === user.id &&
+              newMessage.recipient_id === selectedUser.id));
 
-      if (belongsToSelectedConversation) {
-        setMessages((current) => {
-          if (current.some((message) => message.id === newMessage.id)) {
-            return current;
+        if (belongsToSelectedConversation) {
+          setMessages((current) => {
+            if (current.some((message) => message.id === newMessage.id)) {
+              return current;
+            }
+
+            return [...current, newMessage];
+          });
+
+          if (newMessage.sender_id === selectedUser.id) {
+            markMessagesAsRead(user.id, selectedUser.id);
           }
-
-          return [...current, newMessage];
-        });
-
-        if (newMessage.sender_id === selectedUser.id) {
-          markMessagesAsRead(user.id, selectedUser.id);
         }
-      }
 
-      loadConversations();
-    });
+        loadConversations();
+      },
+      (updatedMessage) => {
+        setMessages((current) =>
+          current.map((message) =>
+            message.id === updatedMessage.id ? updatedMessage : message,
+          ),
+        );
+
+        loadConversations();
+      },
+    );
 
     return unsubscribe;
+  }, [user, loadConversations]);
+
+  useEffect(() => {
+    if (!user?.id || !selectedUser?.id) return;
+
+    const typingChannel = subscribeToTyping(
+      user.id,
+      selectedUser.id,
+      (isTyping) => {
+        setIsOtherUserTyping(isTyping);
+      },
+    );
+
+    typingChannelRef.current = typingChannel;
+
+    return () => {
+      setIsOtherUserTyping(false);
+
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
+        typingTimeoutRef.current = null;
+      }
+
+      typingChannel.setTyping(false);
+      typingChannelRef.current = null;
+      typingChannel.unsubscribe();
+    };
   }, [user, selectedUser]);
 
   useEffect(() => {
@@ -283,8 +384,25 @@ function Messages() {
                         minute: "2-digit",
                       })}
                     </span>
+
+                    {message.sender_id === user.id && (
+                      <button
+                        type="button"
+                        className="unsend-message-button"
+                        onClick={() => handleUnsendMessage(message.id)}
+                      >
+                        Unsend
+                      </button>
+                    )}
                   </div>
                 ))}
+
+                {isOtherUserTyping && (
+                  <div className="typing-indicator" aria-live="polite">
+                    {selectedUser.display_name || selectedUser.username} is
+                    typing...
+                  </div>
+                )}
               </div>
 
               <form
@@ -300,7 +418,7 @@ function Messages() {
                     selectedUser.display_name || selectedUser.username
                   }...`}
                   value={messageText}
-                  onChange={(e) => setMessageText(e.target.value)}
+                  onChange={handleMessageInputChange}
                 />
 
                 <button type="submit" disabled={!messageText.trim() || sending}>
