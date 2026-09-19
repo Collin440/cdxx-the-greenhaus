@@ -8,9 +8,22 @@ import {
   subscribeToMessages,
   subscribeToTyping,
   unsendMessage,
+  addMessageReaction,
+  removeMessageReaction,
+  fetchMessageReactions,
+  subscribeToMessageReactions,
 } from "../lib/supabase";
 import { useAuth } from "../context/AuthContext";
-import { Send, Search, ArrowLeft } from "lucide-react";
+import {
+  Send,
+  Search,
+  ArrowLeft,
+  Heart,
+  Laugh,
+  Flame,
+  Frown,
+  Angry,
+} from "lucide-react";
 
 import "./Messages.css";
 
@@ -27,6 +40,7 @@ function Messages() {
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
   const [isOtherUserTyping, setIsOtherUserTyping] = useState(false);
+  const [messageReactions, setMessageReactions] = useState([]);
 
   const messageListRef = useRef(null);
   const typingTimeoutRef = useRef(null);
@@ -59,6 +73,10 @@ function Messages() {
 
     const data = await fetchConversation(user.id, profile.id);
     setMessages(data);
+
+    const messageIds = data.map((message) => message.id);
+    const reactions = await fetchMessageReactions(messageIds);
+    setMessageReactions(reactions);
 
     await loadConversations();
   }
@@ -102,6 +120,43 @@ function Messages() {
     );
 
     await loadConversations();
+  }
+
+  async function handleMessageReaction(messageId, reactionType) {
+    if (!user?.id) return;
+
+    const existingReaction = messageReactions.find(
+      (reaction) =>
+        reaction.message_id === messageId && reaction.user_id === user.id,
+    );
+
+    if (existingReaction?.reaction_type === reactionType) {
+      const success = await removeMessageReaction(messageId, user.id);
+
+      if (!success) return;
+
+      setMessageReactions((current) =>
+        current.filter(
+          (reaction) =>
+            !(
+              reaction.message_id === messageId && reaction.user_id === user.id
+            ),
+        ),
+      );
+
+      return;
+    }
+
+    const reaction = await addMessageReaction(messageId, user.id, reactionType);
+
+    if (!reaction) return;
+
+    setMessageReactions((current) => [
+      ...current.filter(
+        (item) => !(item.message_id === messageId && item.user_id === user.id),
+      ),
+      reaction,
+    ]);
   }
 
   function handleMessageInputChange(event) {
@@ -189,6 +244,40 @@ function Messages() {
 
     return unsubscribe;
   }, [user, loadConversations]);
+
+  useEffect(() => {
+    if (!user?.id) return;
+
+    const unsubscribe = subscribeToMessageReactions(user.id, (payload) => {
+      if (payload.eventType === "INSERT") {
+        setMessageReactions((current) => {
+          if (current.some((reaction) => reaction.id === payload.new.id)) {
+            return current;
+          }
+
+          return [...current, payload.new];
+        });
+        return;
+      }
+
+      if (payload.eventType === "UPDATE") {
+        setMessageReactions((current) =>
+          current.map((reaction) =>
+            reaction.id === payload.new.id ? payload.new : reaction,
+          ),
+        );
+        return;
+      }
+
+      if (payload.eventType === "DELETE") {
+        setMessageReactions((current) =>
+          current.filter((reaction) => reaction.id !== payload.old.id),
+        );
+      }
+    });
+
+    return unsubscribe;
+  }, [user]);
 
   useEffect(() => {
     if (!user?.id || !selectedUser?.id) return;
@@ -394,6 +483,51 @@ function Messages() {
                         Unsend
                       </button>
                     )}
+
+                    <div className="message-reactions">
+                      {[
+                        { type: "heart", icon: Heart },
+                        { type: "laugh", icon: Laugh },
+                        { type: "fire", icon: Flame },
+                        { type: "sad", icon: Frown },
+                        { type: "angry", icon: Angry },
+                      ].map((reaction) => {
+                        const reactionCount = messageReactions.filter(
+                          (item) =>
+                            item.message_id === message.id &&
+                            item.reaction_type === reaction.type,
+                        ).length;
+
+                        const userReacted = messageReactions.some(
+                          (item) =>
+                            item.message_id === message.id &&
+                            item.user_id === user.id &&
+                            item.reaction_type === reaction.type,
+                        );
+
+                        return (
+                          <button
+                            key={reaction.type}
+                            type="button"
+                            className={`message-reaction-button ${
+                              userReacted ? "active" : ""
+                            }`}
+                            onClick={() =>
+                              handleMessageReaction(message.id, reaction.type)
+                            }
+                            aria-label={`React with ${reaction.type}`}
+                          >
+                            <reaction.icon size={13} strokeWidth={2} />
+
+                            {reactionCount > 0 && (
+                              <span className="message-reaction-count">
+                                {reactionCount}
+                              </span>
+                            )}
+                          </button>
+                        );
+                      })}
+                    </div>
                   </div>
                 ))}
 

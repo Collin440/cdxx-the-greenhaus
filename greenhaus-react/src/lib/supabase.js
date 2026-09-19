@@ -435,6 +435,63 @@ export async function unsendMessage(messageId) {
   return data === true;
 }
 
+export async function addMessageReaction(messageId, userId, reactionType) {
+  const { data, error } = await supabase
+    .from("message_reactions")
+    .upsert(
+      {
+        message_id: messageId,
+        user_id: userId,
+        reaction_type: reactionType,
+      },
+      {
+        onConflict: "message_id,user_id",
+      },
+    )
+    .select()
+    .single();
+
+  if (error) {
+    console.error("Error adding message reaction:", error);
+    return null;
+  }
+
+  return data;
+}
+
+export async function removeMessageReaction(messageId, userId) {
+  const { error } = await supabase
+    .from("message_reactions")
+    .delete()
+    .eq("message_id", messageId)
+    .eq("user_id", userId);
+
+  if (error) {
+    console.error("Error removing message reaction:", error);
+    return false;
+  }
+
+  return true;
+}
+
+export async function fetchMessageReactions(messageIds) {
+  if (!messageIds || messageIds.length === 0) {
+    return [];
+  }
+
+  const { data, error } = await supabase
+    .from("message_reactions")
+    .select("*")
+    .in("message_id", messageIds);
+
+  if (error) {
+    console.error("Error fetching message reactions:", error);
+    return [];
+  }
+
+  return data || [];
+}
+
 export async function fetchConversation(userId, otherUserId) {
   const { data, error } = await supabase
     .from("messages")
@@ -690,4 +747,27 @@ export async function deleteMessageForMe(messageId, userId) {
   }
 
   return true;
+}
+
+export function subscribeToMessageReactions(userId, onReactionChange) {
+  const channel = supabase
+    .channel(`message-reactions:${userId}`)
+    .on(
+      "postgres_changes",
+      {
+        event: "*",
+        schema: "public",
+        table: "message_reactions",
+      },
+      (payload) => {
+        if (onReactionChange) {
+          onReactionChange(payload);
+        }
+      },
+    )
+    .subscribe();
+
+  return () => {
+    supabase.removeChannel(channel);
+  };
 }

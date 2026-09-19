@@ -201,6 +201,86 @@
   outline-offset: 2px;
 }
 
+.message-reactions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 6px;
+  min-height: 24px;
+  opacity: 0;
+  transform: translateY(2px);
+  pointer-events: none;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+.message-bubble:hover .message-reactions,
+.message-bubble:focus-within .message-reactions {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.message-reaction-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  min-width: 27px;
+  height: 25px;
+  padding: 0 6px;
+  border: 1px solid rgba(103, 255, 179, 0.16);
+  border-radius: 999px;
+  background: rgba(4, 28, 22, 0.72);
+  color: rgba(180, 205, 194, 0.72);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  cursor: pointer;
+  transition:
+    color 0.18s ease,
+    background 0.18s ease,
+    border-color 0.18s ease,
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.message-reaction-button:hover {
+  color: #67ffb3;
+  background: rgba(103, 255, 179, 0.08);
+  border-color: rgba(103, 255, 179, 0.42);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+}
+
+.message-reaction-button.active {
+  color: #67ffb3;
+  background: rgba(103, 255, 179, 0.11);
+  border-color: rgba(103, 255, 179, 0.55);
+  box-shadow:
+    0 0 0 1px rgba(103, 255, 179, 0.05),
+    0 4px 14px rgba(103, 255, 179, 0.08);
+}
+
+.message-reaction-button:focus-visible {
+  outline: 2px solid rgba(103, 255, 179, 0.65);
+  outline-offset: 2px;
+}
+
+.message-reaction-count {
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+@media (max-width: 768px) {
+  .message-reactions {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
+}
+
 .message-own {
   align-self: flex-end;
   background: #075b3c;
