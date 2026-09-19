@@ -60,7 +60,12 @@ export async function loginUser(email, password) {
 
 /* CREATE POST */
 
-export async function createPost(userId, content, imageFiles = []) {
+export async function createPost(
+  userId,
+  content,
+  imageFiles = [],
+  videoFile = null,
+) {
   const { data: post, error: postError } = await supabase
     .from("posts")
     .insert({
@@ -74,6 +79,8 @@ export async function createPost(userId, content, imageFiles = []) {
     console.error(postError);
     return null;
   }
+
+  /* UPLOAD IMAGES */
 
   if (imageFiles.length > 0) {
     const imageRows = [];
@@ -109,6 +116,45 @@ export async function createPost(userId, content, imageFiles = []) {
 
     if (imageError) {
       throw imageError;
+    }
+
+    await supabase
+      .from("posts")
+      .update({
+        media_type: "image",
+      })
+      .eq("id", post.id);
+  }
+
+  /* UPLOAD VIDEO */
+
+  if (videoFile) {
+    const extension = videoFile.name.split(".").pop();
+
+    const fileName = `${userId}/${post.id}/${crypto.randomUUID()}.${extension}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from("post-videos")
+      .upload(fileName, videoFile);
+
+    if (uploadError) {
+      throw uploadError;
+    }
+
+    const {
+      data: { publicUrl },
+    } = supabase.storage.from("post-videos").getPublicUrl(fileName);
+
+    const { error: videoError } = await supabase
+      .from("posts")
+      .update({
+        media_type: "video",
+        video_url: publicUrl,
+      })
+      .eq("id", post.id);
+
+    if (videoError) {
+      throw videoError;
     }
   }
 

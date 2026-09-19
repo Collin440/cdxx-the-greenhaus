@@ -73,7 +73,7 @@
   align-items: center;
   gap: 0.5rem;
 
-  background: rgba(255,255,255,0.05);
+  background: rgba(255, 255, 255, 0.05);
   border: none;
 
   padding: 0.8rem 1rem;
@@ -88,4 +88,27 @@
 .post-actions button:hover {
   background: rgba(76, 255, 140, 0.15);
   transform: translateY(-2px);
+}
+
+/* VIDEO POSTS */
+
+.post-video-container {
+  width: 100%;
+  margin-top: 12px;
+  overflow: hidden;
+  border-radius: 14px;
+  background: #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.post-video {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  max-height: 650px;
+  height: auto;
+  object-fit: contain;
+  border-radius: 14px;
 }

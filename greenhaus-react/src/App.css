@@ -35,3 +35,160 @@ body {
 
   max-width: 900px;
 }
+
+/* =========================
+   RESPONSIVE LAYOUT
+   ========================= */
+
+@media (max-width: 1199px) {
+  .right-sidebar {
+    display: none;
+  }
+
+  .main-content {
+    width: 100%;
+  }
+}
+
+/* =========================
+   MOBILE NAVIGATION
+   ========================= */
+
+@media (max-width: 768px) {
+  .main-content {
+    width: 100%;
+    min-width: 0;
+    padding: 72px 12px 80px;
+    display: block;
+  }
+
+  .app-layout {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .feed-container {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+/* =========================
+   MOBILE SIDEBAR DRAWER
+   ========================= */
+
+.mobile-menu-button {
+  display: none;
+}
+
+.mobile-sidebar {
+  display: none;
+}
+
+.mobile-sidebar-overlay {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mobile-menu-button {
+    display: flex;
+
+    position: fixed;
+    top: 16px;
+    left: 16px;
+
+    width: 52px;
+    height: 52px;
+
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(3, 27, 20, 0.95);
+    color: #63ffb4;
+
+    border: 1px solid rgba(99, 255, 180, 0.15);
+    border-radius: 14px;
+
+    cursor: pointer;
+
+    z-index: 1100;
+  }
+
+  .mobile-sidebar {
+    display: block;
+
+    position: fixed;
+
+    top: 0;
+    left: 0;
+
+    width: 280px;
+    height: 100vh;
+
+    z-index: 1200;
+
+    background: #031b14;
+
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+
+    overflow-y: auto;
+  }
+
+  .mobile-sidebar.open {
+    transform: translateX(0);
+  }
+
+  .mobile-sidebar-overlay {
+    display: block;
+
+    position: fixed;
+
+    inset: 0;
+
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(5px);
+
+    opacity: 0;
+    visibility: hidden;
+
+    transition:
+      opacity 0.3s ease,
+      visibility 0.3s ease;
+
+    z-index: 1150;
+  }
+
+  .mobile-sidebar-overlay.visible {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .mobile-sidebar-close {
+    position: absolute;
+
+    top: 16px;
+    right: 16px;
+
+    width: 44px;
+    height: 44px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(0, 255, 140, 0.08);
+    color: #63ffb4;
+
+    border: 1px solid rgba(99, 255, 180, 0.2);
+    border-radius: 50%;
+
+    cursor: pointer;
+
+    z-index: 10;
+  }
+
+  .desktop-sidebar {
+    display: none;
+  }
+}

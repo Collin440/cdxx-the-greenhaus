@@ -12,18 +12,15 @@ import {
   FaPlusCircle,
 } from "react-icons/fa";
 
-import { useAuth }
-  from "../context/AuthContext";
+import { useAuth } from "../context/AuthContext";
 
-import { supabase }
-  from "../lib/supabase";
+import { supabase } from "../lib/supabase";
 
-import { useNavigate }
-  from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-import logo from "../assets/cdxx_logo.jpeg";  
+import logo from "../assets/cdxx_logo.jpeg";
 
-function Sidebar() {
+function Sidebar({ onNavigate = () => {} }) {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [profile, setProfile] = useState(null);
@@ -61,106 +58,77 @@ function Sidebar() {
   }, [user]);
 
   async function handleLogout() {
+    await supabase.auth.signOut();
 
-  await supabase.auth.signOut();
-
-  navigate("/login");
-
-}
+    navigate("/login");
+  }
 
   return (
     <aside className="sidebar">
-      
-    <NavLink
-  to="/app/profile"
-  className="profile-link"
->
-  
-  <div className="brand">
+      <NavLink to="/app/profile" className="profile-link" onClick={onNavigate}>
+        <div className="brand">
+          <img
+            src={profile?.avatar_url || logo}
+            alt="Profile"
+            className="profile-sidebar-avatar"
+          />
 
-    <img
-      src={
-        profile?.avatar_url ||
-        logo
-      }
-      alt="Profile"
-      className="profile-sidebar-avatar"
-    />
+          <h2 className="sidebar-display-name">
+            {profile?.display_name || "GreenHaus User"}
+          </h2>
 
-    <h2 className="sidebar-display-name">
-      {profile?.display_name || "GreenHaus User"}
-    </h2>
-
-    <p className="brand-username">
-      @{profile?.username || "username"}
-    </p>
-
-  </div>
-
-</NavLink>
+          <p className="brand-username">@{profile?.username || "username"}</p>
+        </div>
+      </NavLink>
 
       <nav className="sidebar-nav">
-
-        <NavLink to="/app/feed" className="post-link">
+        <NavLink to="/app/feed" className="post-link" onClick={onNavigate}>
           <FaPlusCircle />
           <span>Spark Up!</span>
         </NavLink>
 
-        <NavLink to="/app">
+        <NavLink to="/app" onClick={onNavigate}>
           <FaHome />
           <span>Home</span>
         </NavLink>
 
-        <NavLink to="/app/explore">
+        <NavLink to="/app/explore" onClick={onNavigate}>
           <FaCompass />
-          <span>Explore</span>
+          <span>Radar / Diwa Va?</span>
         </NavLink>
 
-        <NavLink to="/app/notifications">
+        <NavLink to="/app/notifications" onClick={onNavigate}>
           <FaBell />
           <span>Notifications</span>
         </NavLink>
 
-        <NavLink to="/app/messages">
+        <NavLink to="/app/messages" onClick={onNavigate}>
           <FaEnvelope />
           <span>Messages</span>
         </NavLink>
 
-        <NavLink to="/app/saved">
+        <NavLink to="/app/saved" onClick={onNavigate}>
           <FaBookmark />
           <span>Saved</span>
         </NavLink>
 
-        <NavLink to="/app/settings">
+        <NavLink to="/app/settings" onClick={onNavigate}>
           <FaCog />
           <span>Settings</span>
         </NavLink>
       </nav>
 
       <div className="user-section">
+        <img src={logo} alt="CDXX Logo" className="footer-logo" />
 
-        <img
-           src={logo}
-           alt="CDXX Logo"
-           className="footer-logo"
-        />
+        <p className="user-email">{user?.email}</p>
 
-        <p className="user-email">
-           {user?.email}
-        </p>
-
-        <button
-           onClick={handleLogout}
-           className="logout-btn"
-        >
+        <button onClick={handleLogout} className="logout-btn">
           Logout
         </button>
-
-</div>
-
+      </div>
     </aside>
   );
 }
 
 export default Sidebar;
-

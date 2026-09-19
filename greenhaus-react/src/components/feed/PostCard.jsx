@@ -33,8 +33,9 @@ function PostCard({
 
   const savedByMe = post.saved_posts?.some((save) => save.user_id === user.id);
 
-  console.log("POST:", post.id);
-  console.log("POST IMAGES:", post.post_images);
+  console.log("POST:", post);
+  console.log("MEDIA TYPE:", post.media_type);
+  console.log("VIDEO URL:", post.video_url);
 
   {
     latestSprout?.profiles && (
@@ -81,23 +82,37 @@ function PostCard({
 
       <p className="post-content">{post.content}</p>
 
-      {post.post_images?.length > 0 && (
-        <div
-          className={`post-images-grid images-${Math.min(
-            post.post_images.length,
-            4,
-          )}`}
-        >
-          {post.post_images.map((image) => (
-            <img
-              key={image.id}
-              src={image.image_url}
-              alt="Post"
-              className="post-image"
-              onClick={() => onImageClick(image.image_url)}
-            />
-          ))}
+      {post.media_type === "video" && post.video_url ? (
+        <div className="post-video-container">
+          <video
+            src={post.video_url}
+            className="post-video"
+            controls
+            playsInline
+            preload="metadata"
+          >
+            Your browser does not support video playback.
+          </video>
         </div>
+      ) : (
+        post.post_images?.length > 0 && (
+          <div
+            className={`post-images-grid images-${Math.min(
+              post.post_images.length,
+              4,
+            )}`}
+          >
+            {post.post_images.map((image) => (
+              <img
+                key={image.id}
+                src={image.image_url}
+                alt="Post"
+                className="post-image"
+                onClick={() => onImageClick(image.image_url)}
+              />
+            ))}
+          </div>
+        )
       )}
 
       <div className="post-actions">

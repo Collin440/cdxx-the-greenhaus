@@ -23,6 +23,7 @@ function Feed() {
   const [postText, setPostText] = useState("");
 
   const [selectedImages, setSelectedImages] = useState([]);
+  const [selectedVideo, setSelectedVideo] = useState(null);
 
   const [posts, setPosts] = useState([]);
 
@@ -48,9 +49,16 @@ function Feed() {
   }, []);
 
   async function handlePost() {
-    if (!postText.trim()) return;
+    if (!postText.trim() && selectedImages.length === 0 && !selectedVideo) {
+      return;
+    }
 
-    const newPost = await createPost(user.id, postText, selectedImages);
+    const newPost = await createPost(
+      user.id,
+      postText,
+      selectedImages,
+      selectedVideo,
+    );
 
     console.log("Posting...");
     console.log(selectedImages);
@@ -81,6 +89,7 @@ function Feed() {
       await refreshPosts();
       setPostText("");
       setSelectedImages([]);
+      setSelectedVideo(null);
     }
   }
 
@@ -102,28 +111,52 @@ function Feed() {
           />
 
           <div className="image-upload">
-            <label htmlFor="post-image" className="upload-button">
+            <label htmlFor="post-media" className="upload-button">
               <ImagePlus size={18} />
-              <span>Add Photo</span>
+              <span>Add Media</span>
             </label>
 
             <input
-              id="post-image"
+              id="post-media"
               type="file"
-              accept="image/*"
+              accept="image/*,video/mp4,video/webm,video/quicktime"
               multiple
               onChange={(e) => {
-                setSelectedImages(Array.from(e.target.files));
+                const files = Array.from(e.target.files);
+
+                const images = files.filter((file) =>
+                  file.type.startsWith("image/"),
+                );
+
+                const videos = files.filter((file) =>
+                  file.type.startsWith("video/"),
+                );
+
+                if (videos.length > 0) {
+                  setSelectedVideo(videos[0]);
+                  setSelectedImages([]);
+                } else {
+                  setSelectedImages(images);
+                  setSelectedVideo(null);
+                }
+
+                e.target.value = "";
               }}
               hidden
             />
 
-            {selectedImages.length > 0 && (
+            {(selectedImages.length > 0 || selectedVideo) && (
               <div className="selected-files">
                 {selectedImages.length > 0 && (
                   <span className="selected-file">
-                    📷 {selectedImages.length} image
+                    {selectedImages.length} image
                     {selectedImages.length > 1 ? "s" : ""} selected
+                  </span>
+                )}
+
+                {selectedVideo && (
+                  <span className="selected-file">
+                    Video selected: {selectedVideo.name}
                   </span>
                 )}
               </div>
