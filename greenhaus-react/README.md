@@ -179,7 +179,7 @@ Radar is intended to become one of the primary demonstrations of AI integration 
 
 GreenHaus follows a client-driven React architecture with Supabase providing the backend infrastructure.
 
-```text
+```
 React + Vite
      │
      ├── React Router
@@ -200,9 +200,23 @@ React + Vite
      │    └── Media Components
      │
      └── Supabase Client
+
               │
               ├── Authentication
               ├── PostgreSQL
               ├── Storage
               ├── Realtime
               └── RPC Functions
+
+```
+Author
+
+Collin Moleme
+
+Johannesburg, South Africa
+
+GitHub:
+https://github.com/Collin440
+
+LinkedIn:
+https://www.linkedin.com/in/fofo-moleme-a10b2337a/
