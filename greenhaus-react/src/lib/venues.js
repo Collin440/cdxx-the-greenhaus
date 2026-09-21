@@ -12,6 +12,41 @@ export async function fetchVenues() {
   return data;
 }
 
+export async function searchVenues({
+  category = null,
+  location = null,
+  searchTerm = null,
+} = {}) {
+  const venues = await fetchVenues();
+
+  if (!venues) {
+    return [];
+  }
+
+  const normalizedCategory = category?.trim().toLowerCase() || "";
+  const normalizedLocation = location?.trim().toLowerCase() || "";
+  const normalizedSearchTerm = searchTerm?.trim().toLowerCase() || "";
+
+  return venues.filter((venue) => {
+    const matchesCategory =
+      !normalizedCategory ||
+      venue.category?.toLowerCase() === normalizedCategory;
+
+    const matchesLocation =
+      !normalizedLocation ||
+      venue.location?.toLowerCase().includes(normalizedLocation);
+
+    const matchesSearch =
+      !normalizedSearchTerm ||
+      venue.name?.toLowerCase().includes(normalizedSearchTerm) ||
+      venue.location?.toLowerCase().includes(normalizedSearchTerm) ||
+      venue.category?.toLowerCase().includes(normalizedSearchTerm) ||
+      venue.description?.toLowerCase().includes(normalizedSearchTerm);
+
+    return matchesCategory && matchesLocation && matchesSearch;
+  });
+}
+
 export async function addVenue(venue) {
   const { data, error } = await supabase
     .from("venues")

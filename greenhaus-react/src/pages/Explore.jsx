@@ -17,10 +17,13 @@ import {
 
 import {
   fetchVenues,
+  searchVenues,
   addVenue,
   uploadVenueImage,
   deleteVenue,
 } from "../lib/venues";
+
+import { parseRadarIntent } from "../lib/radar";
 
 function Explore() {
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -36,6 +39,8 @@ function Explore() {
   const [userLocation, setUserLocation] = useState(null);
 
   const [searchTerm, setSearchTerm] = useState("");
+
+  const [radarResults, setRadarResults] = useState([]);
 
   const [venueName, setVenueName] = useState("");
   const [venueLocation, setVenueLocation] = useState("");
@@ -171,6 +176,22 @@ function Explore() {
     return matchesCategory && matchesSearch;
   });
 
+  async function handleRadarSearch() {
+    const intent = parseRadarIntent(searchTerm);
+
+    console.log("RADAR INTENT:", intent);
+
+    const results = await searchVenues({
+      category: intent.category,
+      location: intent.location,
+      searchTerm: intent.searchTerm,
+    });
+
+    console.log("RADAR RESULTS:", results);
+
+    setRadarResults(results);
+  }
+
   return (
     <div className="explore-page">
       <div className="explore-header">
@@ -189,6 +210,28 @@ function Explore() {
           onChange={(e) => setSearchTerm(e.target.value)}
         />
       </div>
+
+      <button type="button" onClick={handleRadarSearch}>
+        Run Radar
+      </button>
+
+      {radarResults.length > 0 && (
+        <div className="radar-results">
+          <h3>Radar Results</h3>
+
+          {radarResults.map((venue) => (
+            <article key={venue.id} className="radar-result">
+              <div className="radar-result-header">
+                <strong>{venue.name}</strong>
+
+                <span className="radar-result-category">{venue.category}</span>
+              </div>
+
+              <p className="radar-result-location">{venue.location}</p>
+            </article>
+          ))}
+        </div>
+      )}
 
       <div className="explore-filters">
         <button
