@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Layout from "./components/Layout";
 import ProtectedRoute from "./components/ProtectedRoute";
 
-import Explore from "./pages/Explore";
+import Radar from "./pages/Explore";
 import Messages from "./pages/Messages";
 
 import Login from "./pages/Login";
@@ -48,7 +48,7 @@ function App() {
 
           <Route index element={<Feed />} />
 
-          <Route path="explore" element={<Explore />} />
+          <Route path="explore" element={<Radar />} />
 
           <Route path="messages" element={<Messages />} />
 
