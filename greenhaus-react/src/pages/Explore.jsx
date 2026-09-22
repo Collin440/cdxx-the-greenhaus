@@ -202,18 +202,20 @@ function Explore() {
         </p>
       </div>
 
-      <div className="explore-search">
-        <input
-          type="text"
-          placeholder="Search venues, cities, vibes..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-      </div>
+      <div className="radar-search-row">
+        <div className="explore-search">
+          <input
+            type="text"
+            placeholder="Search venues, cities, vibes..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
 
-      <button type="button" onClick={handleRadarSearch}>
-        Run Radar
-      </button>
+        <button type="button" onClick={handleRadarSearch}>
+          Run Radar
+        </button>
+      </div>
 
       {radarResults.length > 0 && (
         <div className="radar-results">

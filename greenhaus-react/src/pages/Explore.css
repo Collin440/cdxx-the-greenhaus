@@ -733,40 +733,66 @@
 /* RADAR BUTTON               */
 /* ========================= */
 
-.explore-search + button {
-  margin-top: 12px;
-  padding: 11px 20px;
+.radar-search-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  width: 100%;
+  min-width: 0;
+  margin: 0 0 14px;
+  padding: 0;
+}
 
+.radar-search-row .explore-search {
+  flex: 1 1 auto;
+  width: auto;
+  min-width: 0;
+  height: 50px;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.radar-search-row .explore-search input {
+  width: 100%;
+  height: 50px;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.radar-search-row > button {
+  flex: 0 0 auto;
+  width: auto;
+  min-width: 120px;
+  height: 50px;
+  margin: 0;
+  box-sizing: border-box;
+  padding: 0 22px;
   border: 1px solid rgba(99, 255, 180, 0.2);
   border-radius: 12px;
-
   background: linear-gradient(135deg, #63ffb4, #00d978);
-
   color: #031b14;
   font-size: 0.9rem;
   font-weight: 700;
-
   cursor: pointer;
-
   box-shadow: 0 6px 18px rgba(0, 255, 140, 0.18);
-
   transition:
     transform 0.2s ease,
     box-shadow 0.2s ease,
     filter 0.2s ease;
 }
 
-.explore-search + button:hover {
+.radar-search-row > button:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 24px rgba(0, 255, 140, 0.28);
   filter: brightness(1.05);
 }
 
-.explore-search + button:active {
+.radar-search-row > button:active {
   transform: translateY(0);
 }
 
-.explore-search + button:focus-visible {
+.radar-search-row > button:focus-visible {
   outline: 2px solid #63ffb4;
   outline-offset: 3px;
 }
