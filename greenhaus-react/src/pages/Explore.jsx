@@ -25,6 +25,8 @@ import {
 
 import { parseRadarIntent } from "../lib/radar";
 
+import { searchExternalPlaces } from "../lib/externalPlaces";
+
 function Explore() {
   const [selectedCategory, setSelectedCategory] = useState("All");
 
@@ -181,15 +183,31 @@ function Explore() {
 
     console.log("RADAR INTENT:", intent);
 
-    const results = await searchVenues({
-      category: intent.category,
-      location: intent.location,
-      searchTerm: intent.searchTerm,
-    });
+    const [greenHausResults, externalResults] = await Promise.all([
+      searchVenues({
+        category: intent.category,
+        location: intent.location,
+        searchTerm: intent.searchTerm,
+      }),
+      searchExternalPlaces({
+        category: intent.category,
+        location: intent.location,
+        searchTerm: intent.searchTerm,
+      }),
+    ]);
 
-    console.log("RADAR RESULTS:", results);
+    console.log("GREENHAUS RESULTS:", greenHausResults);
+    console.log("EXTERNAL RESULTS:", externalResults);
 
-    setRadarResults(results);
+    const combinedResults = [
+      ...greenHausResults.map((venue) => ({
+        ...venue,
+        source: "GreenHaus",
+      })),
+      ...externalResults,
+    ];
+
+    setRadarResults(combinedResults);
   }
 
   return (
@@ -226,7 +244,9 @@ function Explore() {
               <div className="radar-result-header">
                 <strong>{venue.name}</strong>
 
-                <span className="radar-result-category">{venue.category}</span>
+                <span className="radar-result-category">
+                  {venue.category} · {venue.source}
+                </span>
               </div>
 
               <p className="radar-result-location">{venue.location}</p>

@@ -17,34 +17,45 @@ export async function searchVenues({
   location = null,
   searchTerm = null,
 } = {}) {
-  const venues = await fetchVenues();
+  let query = supabase.from("venues").select("*");
 
-  if (!venues) {
+  const normalizedCategory = category?.trim() || "";
+  const normalizedLocation = location?.trim() || "";
+  const normalizedSearchTerm = searchTerm?.trim() || "";
+
+  if (normalizedCategory) {
+    query = query.ilike("category", normalizedCategory);
+  }
+
+  if (normalizedLocation) {
+    query = query.ilike("location", `%${normalizedLocation}%`);
+  }
+
+  if (normalizedSearchTerm) {
+    const safeSearchTerm = normalizedSearchTerm
+      .replace(/\\/g, "\\\\")
+      .replace(/%/g, "\\%")
+      .replace(/_/g, "\\_")
+      .replace(/,/g, "\\,");
+
+    query = query.or(
+      [
+        `name.ilike.%${safeSearchTerm}%`,
+        `location.ilike.%${safeSearchTerm}%`,
+        `category.ilike.%${safeSearchTerm}%`,
+        `description.ilike.%${safeSearchTerm}%`,
+      ].join(","),
+    );
+  }
+
+  const { data, error } = await query;
+
+  if (error) {
+    console.error("RADAR SEARCH ERROR:", error);
     return [];
   }
 
-  const normalizedCategory = category?.trim().toLowerCase() || "";
-  const normalizedLocation = location?.trim().toLowerCase() || "";
-  const normalizedSearchTerm = searchTerm?.trim().toLowerCase() || "";
-
-  return venues.filter((venue) => {
-    const matchesCategory =
-      !normalizedCategory ||
-      venue.category?.toLowerCase() === normalizedCategory;
-
-    const matchesLocation =
-      !normalizedLocation ||
-      venue.location?.toLowerCase().includes(normalizedLocation);
-
-    const matchesSearch =
-      !normalizedSearchTerm ||
-      venue.name?.toLowerCase().includes(normalizedSearchTerm) ||
-      venue.location?.toLowerCase().includes(normalizedSearchTerm) ||
-      venue.category?.toLowerCase().includes(normalizedSearchTerm) ||
-      venue.description?.toLowerCase().includes(normalizedSearchTerm);
-
-    return matchesCategory && matchesLocation && matchesSearch;
-  });
+  return data || [];
 }
 
 export async function addVenue(venue) {
