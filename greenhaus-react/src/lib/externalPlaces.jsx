@@ -76,7 +76,7 @@ function buildOverpassQuery({
   `;
 }
 
-function mapExternalPlace(element, category) {
+function mapExternalPlace(element, category, fallbackLocation = null) {
   const tags = element.tags || {};
 
   const latitude = element.lat ?? element.center?.lat ?? null;
@@ -90,7 +90,7 @@ function mapExternalPlace(element, category) {
     location:
       tags["addr:street"] && tags["addr:city"]
         ? `${tags["addr:street"]}, ${tags["addr:city"]}`
-        : tags["addr:city"] || "South Africa",
+        : tags["addr:city"] || fallbackLocation || "South Africa",
     latitude,
     longitude,
     description: tags.description || "",
@@ -184,7 +184,7 @@ export async function searchExternalPlaces({
         .map((element) => {
           const detectedCategory = category || detectCategory(element);
 
-          return mapExternalPlace(element, detectedCategory);
+          return mapExternalPlace(element, detectedCategory, location);
         })
         .filter((place) => {
           if (!place.name || place.name === "Unnamed place") {
