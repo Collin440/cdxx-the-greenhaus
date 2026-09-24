@@ -40,7 +40,12 @@ function FlyToVenue({ venue }) {
   return null;
 }
 
-function ExploreMap({ venues, selectedVenue, userLocation }) {
+function ExploreMap({
+  venues,
+  radarResults = [],
+  selectedVenue,
+  userLocation,
+}) {
   return (
     <MapContainer
       center={
@@ -94,6 +99,43 @@ function ExploreMap({ venues, selectedVenue, userLocation }) {
           </Popup>
         </Marker>
       ))}
+      {radarResults.map((place) => {
+        if (
+          !Number.isFinite(place.latitude) ||
+          !Number.isFinite(place.longitude)
+        ) {
+          return null;
+        }
+
+        return (
+          <Marker
+            key={place.id}
+            position={[place.latitude, place.longitude]}
+            icon={venueIcon}
+          >
+            <Popup>
+              <div className="map-popup">
+                <strong>{place.name}</strong>
+
+                <p>{place.location}</p>
+
+                <span>{place.category}</span>
+
+                <a
+                  href={`https://www.google.com/maps/search/?api=1&query=${place.latitude},${place.longitude}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="directions-btn"
+                >
+                  Open in Maps
+                </a>
+
+                {place.source && <small>Source: {place.source}</small>}
+              </div>
+            </Popup>
+          </Marker>
+        );
+      })}
     </MapContainer>
   );
 }

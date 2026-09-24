@@ -487,6 +487,7 @@ function Explore() {
           <div className="map-container">
             <ExploreMap
               venues={filteredVenues}
+              radarResults={radarResults}
               selectedVenue={selectedVenue}
               userLocation={userLocation}
             />
