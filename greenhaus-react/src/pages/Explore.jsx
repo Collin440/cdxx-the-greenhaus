@@ -32,6 +32,8 @@ function Explore() {
 
   const [selectedVenue, setSelectedVenue] = useState(null);
 
+  const [selectedRadarPlace, setSelectedRadarPlace] = useState(null);
+
   const [venueModalOpen, setVenueModalOpen] = useState(false);
 
   const [showAddVenueModal, setShowAddVenueModal] = useState(false);
@@ -240,7 +242,14 @@ function Explore() {
           <h3>Radar Results</h3>
 
           {radarResults.map((venue) => (
-            <article key={venue.id} className="radar-result">
+            <article
+              key={venue.id}
+              className="radar-result"
+              onClick={() => {
+                setSelectedRadarPlace(venue);
+                setSelectedVenue(null);
+              }}
+            >
               <div className="radar-result-header">
                 <strong>{venue.name}</strong>
 
@@ -437,6 +446,7 @@ function Explore() {
               key={venue.id}
               onClick={() => {
                 setSelectedVenue(venue);
+                setSelectedRadarPlace(null);
                 setVenueModalOpen(true);
               }}
             >

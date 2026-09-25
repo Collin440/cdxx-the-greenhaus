@@ -44,6 +44,7 @@ function ExploreMap({
   venues,
   radarResults = [],
   selectedVenue,
+  selectedRadarPlace,
   userLocation,
 }) {
   return (
