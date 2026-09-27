@@ -28,10 +28,14 @@ const userIcon = L.divIcon({
 
 L.Icon.Default.imagePath = "/src/assets/images/";
 
-function FlyToVenue({ venue }) {
+function FlyToVenue({ venue, radarPlace }) {
   const map = useMap();
 
-  if (venue) {
+  if (radarPlace) {
+    map.flyTo([radarPlace.latitude, radarPlace.longitude], 15, {
+      duration: 2,
+    });
+  } else if (venue) {
     map.flyTo([venue.lat, venue.lng], 15, {
       duration: 2,
     });
@@ -66,7 +70,7 @@ function ExploreMap({
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
 
-      <FlyToVenue venue={selectedVenue} />
+      <FlyToVenue venue={selectedVenue} radarPlace={selectedRadarPlace} />
 
       {userLocation && (
         <Marker position={[userLocation.lat, userLocation.lng]} icon={userIcon}>

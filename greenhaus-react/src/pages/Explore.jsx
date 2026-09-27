@@ -499,6 +499,7 @@ function Explore() {
               venues={filteredVenues}
               radarResults={radarResults}
               selectedVenue={selectedVenue}
+              selectedRadarPlace={selectedRadarPlace}
               userLocation={userLocation}
             />
           </div>
