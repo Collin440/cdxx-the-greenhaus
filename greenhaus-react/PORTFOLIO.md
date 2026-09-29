@@ -11,7 +11,7 @@ A venue-first social platform for discovering dispensaries, restaurants, galleri
 
 GreenHaus is a full-stack social platform built around community, creativity, discovery and conversation. It's a portfolio project designed to demonstrate real frontend, backend, database, authentication and real-time application development — not a tutorial clone. The interface is dark, modern and cyberpunk-inspired, with a strong emphasis on responsive UX.
 
-The core idea: instead of a generic feed, GreenHaus is built around *venues*. Users create and follow places, not just people — leaning into local discovery rather than a TikTok-style content firehose.
+The core idea: instead of a generic feed, GreenHaus is built around _venues_. Users create and follow places, not just people — leaning into local discovery rather than a TikTok-style content firehose.
 
 ## Status: active development
 
@@ -36,18 +36,32 @@ The core social platform is operational:
 - Location fallback handling, for when precise user location isn't available
 - Place selection on the map, tying a result back to a full venue view
 
-Radar surfaces nearby venues by blending what's already on GreenHaus with live external place data, centered on the person searching. The next step is layering in natural-language search — "find dispensaries" or "somewhere quiet to get coffee" — resolving into real map results instead of just keyword filters.
+Radar surfaces nearby venues by blending what's already on GreenHaus with live external place data, centered on the person searching.
+
+- **Filtered venues** already on the platform (`filteredVenues`)
+- **External place results** pulled in via a radar search (`radarResults`)
+- A **venue detail modal** for anything selected, on- or off-platform (`selectedVenue` / `selectedRadarPlace`)
+- **Location-aware results**, centered on the user (`userLocation`)
+
+jsx
+<ExploreMap
+  venues={filteredVenues}
+  radarResults={radarResults}
+  selectedVenue={selectedVenue}
+  selectedRadarPlace={selectedRadarPlace}
+  userLocation={userLocation}
+/>
 
 ## Tech stack
 
-| Layer | Tools |
-|---|---|
-| Frontend | React |
-| Backend / DB | Supabase |
-| Auth | Supabase Auth |
-| Storage | Supabase Storage |
-| Realtime | Supabase Realtime (messaging) |
-| Maps | Google Maps API |
+| Layer        | Tools                         |
+| ------------ | ----------------------------- |
+| Frontend     | React                         |
+| Backend / DB | Supabase                      |
+| Auth         | Supabase Auth                 |
+| Storage      | Supabase Storage              |
+| Realtime     | Supabase Realtime (messaging) |
+| Maps         | Google Maps API               |
 
 ## Why this project
 
@@ -55,22 +69,30 @@ GreenHaus is built to demonstrate the full stack in one place: schema design, au
 
 ## Recent activity
 
-| Date | Commit | Hash |
-|---|---|---|
-| Sep 27, 2026 | Add project portfolio | `6093629` |
-| Sep 27, 2026 | Add radar place map selection | `b5c7c18` |
-| Sep 25, 2026 | feat: build Radar results list on Explore page | `945511c` |
-| Sep 24, 2026 | feat: show Radar results on Explore map | `f8724dd` |
-| Sep 23, 2026 | fix: improve Radar external location fallback | `0bae261` |
-| Sep 22, 2026 | feat: build Radar external place discovery | `274d067` |
-| Sep 22, 2026 | Polish Radar search layout | `1e0b1f1` |
-| Sep 22, 2026 | Build Radar venue search foundation | `4c036c5` |
-| Sep 21, 2026 | Rename Explore reference to Radar | `ccb5c17` |
-| Sep 19, 2026 | Add video posts and mobile navigation | `54de39f` |
-| Sep 19, 2026 | feat: add realtime message reactions | `de7cbcd` |
-| Sep 19, 2026 | style: polish message unsend button | `e44efd7` |
-| Sep 13, 2026 | fix: restore missing @supabase/supabase-js dependency | `f2f1c33` |
-| Sep 3, 2026 | feat: complete messaging core and unsend functionality | `11c8f90` |
+| Date         | Commit                                                                 | Hash      |
+| ------------ | ---------------------------------------------------------------------- | --------- |
+| Sep 27, 2026 | Add project portfolio                                                  | `6093629` |
+| Sep 27, 2026 | Add radar place map selection                                          | `b5c7c18` |
+| Sep 25, 2026 | feat: build Radar results list on Explore page                         | `945511c` |
+| Sep 24, 2026 | feat: show Radar results on Explore map                                | `f8724dd` |
+| Sep 23, 2026 | fix: improve Radar external location fallback                          | `0bae261` |
+| Sep 22, 2026 | feat: build Radar external place discovery                             | `274d067` |
+| Sep 22, 2026 | Polish Radar search layout                                             | `1e0b1f1` |
+| Sep 22, 2026 | Build Radar venue search foundation                                    | `4c036c5` |
+| Sep 21, 2026 | Rename Explore reference to Radar                                      | `ccb5c17` |
+| Sep 19, 2026 | Add video posts and mobile navigation                                  | `54de39f` |
+| Sep 19, 2026 | feat: add realtime message reactions                                   | `de7cbcd` |
+| Sep 19, 2026 | style: polish message unsend button                                    | `e44efd7` |
+| Sep 13, 2026 | fix: restore missing @supabase/supabase-js dependency                  | `f2f1c33` |
+| Sep 3, 2026  | feat: complete messaging core and unsend functionality                 | `11c8f90` |
 | Aug 18, 2026 | feat(messages): implement realtime messaging and conversation features | `0e0042e` |
 
-*Full history: [github.com/Collin440/cdxx-the-greenhaus/commits/main](https://github.com/Collin440/cdxx-the-greenhaus/commits/main)*
+_Full history: [github.com/Collin440/cdxx-the-greenhaus/commits/main](https://github.com/Collin440/cdxx-the-greenhaus/commits/main)_
+
+```
+
+```
+
+```
+
+```

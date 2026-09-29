@@ -29,6 +29,9 @@ const CATEGORY_ALIASES = {
   restaurants: "Restaurant",
   food: "Restaurant",
   dining: "Restaurant",
+  coffee: "Restaurant",
+  cafe: "Restaurant",
+  cafes: "Restaurant",
 
   park: "Park",
   parks: "Park",
@@ -80,8 +83,16 @@ export function parseRadarIntent(query) {
 
     searchTerm = searchTerm
       .replace(categoryRegex, "")
+      .replace(
+        /\b(?:somewhere|someplace|a place|to get|where to|looking for|find me|find|show me)\b/gi,
+        "",
+      )
       .replace(/\s+/g, " ")
       .trim();
+
+    if (/^(?:quiet|peaceful|relaxed|chill)$/i.test(searchTerm)) {
+      searchTerm = "";
+    }
   }
 
   return {
