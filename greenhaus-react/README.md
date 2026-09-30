@@ -1,10 +1,11 @@
+
 # CDXX: The GreenHaus
 
-A full-stack social media platform built around community, creativity, discovery and conversation.
+A **venue-first social platform** built around community, creativity, discovery and conversation.
 
-**CDXX: The GreenHaus** is a production-oriented portfolio project designed to demonstrate modern frontend, backend, database, authentication and real-time application development.
+**CDXX: The GreenHaus** is a production-oriented portfolio project demonstrating modern frontend, backend, database, authentication and real-time application development.
 
-The platform is built with React and Supabase and is designed with a dark, modern, cyberpunk-inspired interface with a strong emphasis on responsive UX.
+Built with React and Supabase, GreenHaus combines social interaction with place-based discovery through a dark, modern, cyberpunk-inspired interface with a strong emphasis on responsive UX.
 
 ---
 
@@ -12,124 +13,151 @@ The platform is built with React and Supabase and is designed with a dark, moder
 
 **Active Development**
 
-The core social platform is operational, with authentication, profiles, social interactions, media uploads, notifications, realtime messaging and responsive navigation implemented.
+The core social platform is operational, including authentication, profiles, social interactions, media uploads, notifications, realtime messaging and responsive navigation.
 
-The next major development direction is **Radar (Diwa Va)** — the planned AI-powered discovery layer for the platform.
+The current major development direction is **Radar (Diwa Va)** — GreenHaus's discovery layer focused on natural-language place discovery and location-aware search.
 
----
-
-##Screenshots
-<img width="1011" height="927" alt="WhatsApp Image 2026-09-19 at 21 22 36" src="https://github.com/user-attachments/assets/c01c73a8-0b4d-423c-8fc6-ff2a56eac334" />
-<img width="886" height="1031" alt="WhatsApp Image 2026-09-19 at 21 35 14" src="https://github.com/user-attachments/assets/b6287de6-246d-41c4-a68a-7c7cc8399ff7" />
-<img width="882" height="1033" alt="WhatsApp Image 2026-09-19 at 21 35 49" src="https://github.com/user-attachments/assets/dd8e74a2-ae6d-41be-a599-ec1756281709" />
+Radar is currently being developed incrementally, with the goal of allowing users to describe what they are looking for naturally rather than relying solely on predefined categories or conventional keyword searches.
 
 ---
 
-## Features
+## Screenshots
 
-### Authentication
+### Feed
 
-- User registration
-- User login
-- Supabase Authentication
-- Protected application routes
-- Persistent authenticated sessions
-- Logout functionality
+<img width="1011" height="927" alt="GreenHaus Feed" src="https://github.com/user-attachments/assets/c01c73a8-0b4d-423c-8fc6-ff2a56eac334" />
 
-### Profiles
+### Profile
 
-- User profiles
-- Display names
-- Usernames
-- Profile avatars
-- Profile banners
-- Edit profile functionality
-- Followers
-- Following
-- Follower/following modals
-- Profile navigation
+<img width="886" height="1031" alt="GreenHaus Profile" src="https://github.com/user-attachments/assets/b6287de6-246d-41c4-a68a-7c7cc8399ff7" />
 
-### Social Feed
+### Messaging
+
+<img width="882" height="1033" alt="GreenHaus Messaging" src="https://github.com/user-attachments/assets/dd8e74a2-ae6d-41be-a599-ec1756281709" />
+
+---
+
+# Features
+
+## Authentication
+
+* User registration
+* User login
+* Supabase Authentication
+* Protected application routes
+* Persistent authenticated sessions
+* Logout functionality
+
+## Profiles
+
+* User profiles
+* Display names
+* Usernames
+* Profile avatars
+* Profile banners
+* Edit profile functionality
+* Followers
+* Following
+* Follower/following modals
+* Profile navigation
+
+## Social Feed
 
 Users can create and interact with posts through:
 
-- Text posts
-- Image posts
-- Video posts
-- Multiple images
-- Likes
-- Comments
-- Reposts / Sprouts
-- Saved posts
-- Post sharing
-- User profile navigation
+* Text posts
+* Image posts
+* Video posts
+* Multiple images
+* Likes
+* Comments
+* Reposts / Sprouts
+* Saved posts
+* Post sharing
+* User profile navigation
 
 Posts are stored in PostgreSQL through Supabase, while media is handled through Supabase Storage.
 
-### Media
+## Media
 
 The platform currently supports:
 
-- Image uploads
-- Multiple images per post
-- Video uploads
-- MP4
-- WebM
-- QuickTime video
-- Responsive media rendering
-- Image lightbox viewing
-- Supabase Storage integration
+* Image uploads
+* Multiple images per post
+* Video uploads
+* MP4
+* WebM
+* QuickTime video
+* Responsive media rendering
+* Image lightbox viewing
+* Supabase Storage integration
 
 Video is implemented as a media capability within the existing posting system rather than as a separate video product.
 
-### Notifications
+## Notifications
 
 The notification system supports database-backed notification records for social activity.
 
-### Realtime Messaging
+## Realtime Messaging
 
 The messaging system includes:
 
-- Direct conversations
-- User search
-- Message persistence
-- Read status
-- Typing indicators
-- Realtime message updates
-- Message deletion for the current user
-- Message unsending
-- Message reactions
-- Realtime reaction updates
+* Direct conversations
+* User search
+* Message persistence
+* Read status
+* Typing indicators
+* Realtime message updates
+* Message deletion for the current user
+* Message unsending
+* Message reactions
+* Realtime reaction updates
 
-Supported message reactions (via Lucide) currently include:
+Supported message reactions via Lucide currently include:
 
-- Heart
-- Laugh
-- Fire
-- Sad
-- Angry
+* Heart
+* Laugh
+* Fire
+* Sad
+* Angry
 
 Message unsending is protected by a server-side Supabase RPC with a time restriction.
 
-### Saved Posts
+## Saved Posts
 
 Users can save posts and access them through the dedicated Saved section.
 
-### Radar — Diwa Va
+---
 
-**Radar (Diwa Va)** is the next major direction for GreenHaus.
+# Radar — Diwa Va
 
-The current Explore concept is being evolved into a future AI-assisted discovery system.
+**Radar (Diwa Va)** is the next major development direction for GreenHaus.
 
-The planned experience is centered around natural-language discovery.
+The existing Explore concept is being evolved into a natural-language discovery system designed to make place discovery more conversational and context-aware.
 
-For example:
+The current Radar development includes:
+
+* Natural-language intent parsing
+* Category detection
+* Location extraction
+* Search-term extraction
+* Preference detection
+* Location-aware discovery
+* GreenHaus venue search
+* External place discovery
+* Map-based place exploration
+
+For example, a user could enter:
 
 > "What's the move tonight?"
 
-The future Radar system will interpret the user's intent and combine that interpretation with structured application data to return relevant places, activities and community discoveries.
+or:
 
-The planned architecture separates:
+> "Find a peaceful restaurant"
+
+Radar is being designed to interpret the intent behind these requests and translate that intent into structured search criteria.
+
+The planned experience is built around separating:
 
 **AI interpretation**
 
@@ -137,7 +165,9 @@ from
 
 **database truth and deterministic retrieval**
 
-The AI layer will interpret intent rather than becoming the source of truth for venue or application data.
+The AI layer is intended to interpret user intent rather than become the source of truth for venue or application data.
+
+This separation is an important part of the planned architecture, allowing GreenHaus to combine conversational AI capabilities with deterministic application and location data.
 
 Radar is intended to become one of the primary demonstrations of AI integration within the GreenHaus platform.
 
@@ -147,31 +177,32 @@ Radar is intended to become one of the primary demonstrations of AI integration 
 
 ## Frontend
 
-- React
-- Vite
-- JavaScript
-- React Router
-- CSS
-- Lucide React
-- Font Awesome
+* React
+* Vite
+* JavaScript
+* React Router
+* CSS
+* Lucide React
+* Font Awesome
+* Google Maps API
 
 ## Backend
 
-- Supabase
-- PostgreSQL
-- Supabase Authentication
-- Supabase Storage
-- Supabase Realtime
-- Row Level Security (RLS)
-- PostgreSQL functions / RPC
+* Supabase
+* PostgreSQL
+* Supabase Authentication
+* Supabase Storage
+* Supabase Realtime
+* Row Level Security (RLS)
+* PostgreSQL functions / RPC
 
 ## Development
 
-- Git
-- GitHub
-- Visual Studio Code
-- Windows / PowerShell
-- Chrome / Edge Developer Tools
+* Git
+* GitHub
+* Visual Studio Code
+* Windows / PowerShell
+* Chrome / Edge Developer Tools
 
 ---
 
@@ -179,7 +210,7 @@ Radar is intended to become one of the primary demonstrations of AI integration 
 
 GreenHaus follows a client-driven React architecture with Supabase providing the backend infrastructure.
 
-```
+```text
 React + Vite
      │
      ├── React Router
@@ -191,7 +222,13 @@ React + Vite
      │    ├── Notifications
      │    ├── Saved
      │    ├── Settings
-     │    └── Radar
+     │    └── Explore / Radar
+     │
+     ├── Radar Discovery Layer
+     │    ├── Natural-language intent parsing
+     │    ├── Location resolution
+     │    ├── GreenHaus venue search
+     │    └── External place discovery
      │
      ├── Reusable Components
      │    ├── PostCard
@@ -200,23 +237,25 @@ React + Vite
      │    └── Media Components
      │
      └── Supabase Client
-
               │
               ├── Authentication
               ├── PostgreSQL
               ├── Storage
               ├── Realtime
               └── RPC Functions
-
 ```
-Author
 
-Collin Moleme
+---
+
+# Author
+
+**Collin Moleme**
 
 Johannesburg, South Africa
 
-GitHub:
+**GitHub:**
 https://github.com/Collin440
 
-LinkedIn:
+**LinkedIn:**
 https://www.linkedin.com/in/fofo-moleme-a10b2337a/
+
