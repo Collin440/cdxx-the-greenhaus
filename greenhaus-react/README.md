@@ -27,13 +27,13 @@ Radar is currently being developed incrementally, with the goal of allowing user
 
 <img width="1011" height="927" alt="GreenHaus Feed" src="https://github.com/user-attachments/assets/c01c73a8-0b4d-423c-8fc6-ff2a56eac334" />
 
-### Profile
+### Mobile
 
-<img width="886" height="1031" alt="GreenHaus Profile" src="https://github.com/user-attachments/assets/b6287de6-246d-41c4-a68a-7c7cc8399ff7" />
+<img width="886" height="1031" alt="GreenHaus Mobile" src="https://github.com/user-attachments/assets/b6287de6-246d-41c4-a68a-7c7cc8399ff7" />
 
-### Messaging
+### Burger Overlay
 
-<img width="882" height="1033" alt="GreenHaus Messaging" src="https://github.com/user-attachments/assets/dd8e74a2-ae6d-41be-a599-ec1756281709" />
+<img width="882" height="1033" alt="GreenHaus Overlay" src="https://github.com/user-attachments/assets/dd8e74a2-ae6d-41be-a599-ec1756281709" />
 
 ---
 
