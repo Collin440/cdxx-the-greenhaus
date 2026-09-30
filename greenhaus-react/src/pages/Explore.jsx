@@ -185,17 +185,24 @@ function Explore() {
 
     console.log("RADAR INTENT:", intent);
 
+    const greenHausPromise = searchVenues({
+      category: intent.category,
+      location: intent.location,
+      searchTerm: intent.searchTerm,
+    });
+
+    const externalPromise =
+      intent.searchTerm || intent.location
+        ? searchExternalPlaces({
+            category: intent.category,
+            location: intent.location,
+            searchTerm: intent.searchTerm,
+          })
+        : Promise.resolve([]);
+
     const [greenHausResults, externalResults] = await Promise.all([
-      searchVenues({
-        category: intent.category,
-        location: intent.location,
-        searchTerm: intent.searchTerm,
-      }),
-      searchExternalPlaces({
-        category: intent.category,
-        location: intent.location,
-        searchTerm: intent.searchTerm,
-      }),
+      greenHausPromise,
+      externalPromise,
     ]);
 
     console.log("GREENHAUS RESULTS:", greenHausResults);

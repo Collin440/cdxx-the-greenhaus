@@ -37,6 +37,8 @@ const CATEGORY_ALIASES = {
   parks: "Park",
 };
 
+const RADAR_PREFERENCES = ["quiet", "peaceful", "relaxed", "chill"];
+
 export function parseRadarIntent(query) {
   const normalizedQuery = query.trim().toLowerCase();
 
@@ -45,15 +47,23 @@ export function parseRadarIntent(query) {
       category: null,
       location: null,
       searchTerm: null,
+      preferences: [],
     };
   }
 
   let category = null;
+  let preferences = [];
 
   for (const [alias, mappedCategory] of Object.entries(CATEGORY_ALIASES)) {
     if (normalizedQuery.includes(alias)) {
       category = mappedCategory;
       break;
+    }
+  }
+
+  for (const preference of RADAR_PREFERENCES) {
+    if (normalizedQuery.includes(preference)) {
+      preferences.push(preference);
     }
   }
 
@@ -84,20 +94,24 @@ export function parseRadarIntent(query) {
     searchTerm = searchTerm
       .replace(categoryRegex, "")
       .replace(
-        /\b(?:somewhere|someplace|a place|to get|where to|looking for|find me|find|show me)\b/gi,
+        /\b(?:somewhere|someplace|a place|to get|where to|looking for|find me|find|show me|a)\b/gi,
         "",
-      )
-      .replace(/\s+/g, " ")
-      .trim();
-
-    if (/^(?:quiet|peaceful|relaxed|chill)$/i.test(searchTerm)) {
-      searchTerm = "";
-    }
+      );
   }
+
+  // Remove preference words because they are represented
+  // separately in the preferences field.
+  for (const preference of RADAR_PREFERENCES) {
+    const preferenceRegex = new RegExp(`\\b${preference}\\b`, "gi");
+    searchTerm = searchTerm.replace(preferenceRegex, "");
+  }
+
+  searchTerm = searchTerm.replace(/\s+/g, " ").trim();
 
   return {
     category,
     location,
     searchTerm: searchTerm || null,
+    preferences,
   };
 }

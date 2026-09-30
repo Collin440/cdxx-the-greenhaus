@@ -42,21 +42,33 @@ function buildOverpassQuery({
     : null;
 
   if (category === "Restaurant") {
-    const nameFilter = search ? `[name~"${search}",i]` : "";
-
-    return `
+    if (search) {
+      return `
       [out:json][timeout:25];
       (
-        node["amenity"="restaurant"]${nameFilter}(around:8000,${latitude},${longitude});
-        way["amenity"="restaurant"]${nameFilter}(around:8000,${latitude},${longitude});
+        nwr["amenity"~"^(restaurant|cafe|fast_food)$"]["cuisine"~"${search}",i"](
+          around:${SEARCH_RADIUS_METERS},${latitude},${longitude}
+        );
+        nwr["amenity"~"^(restaurant|cafe|fast_food)$"]["name"~"${search}",i"](
+          around:${SEARCH_RADIUS_METERS},${latitude},${longitude}
+        );
       );
       out center tags 25;
     `;
+    }
+
+    return `
+    [out:json][timeout:25];
+    nwr["amenity"~"^(restaurant|cafe|fast_food)$"](
+      around:${SEARCH_RADIUS_METERS},${latitude},${longitude}
+    );
+    out center tags 25;
+  `;
   }
 
   const tags = category
     ? CATEGORY_TAGS[category] || []
-    : Object.values(CATEGORY_TAGS).flat();
+    : CATEGORY_TAGS.Restaurant;
 
   const queries = tags.flatMap((tag) => {
     const nameFilter = search ? `[name~"${search}",i]` : `[name]`;
@@ -174,11 +186,25 @@ export async function searchExternalPlaces({
     longitude: coordinates.longitude,
   });
 
+  console.log("RADAR EXTERNAL SEARCH:", {
+    category,
+    location,
+    searchTerm,
+    coordinates,
+  });
+
+  console.log("OVERPASS RADIUS:", SEARCH_RADIUS_METERS);
+  console.log("OVERPASS QUERY:", query);
+
   for (const endpoint of OVERPASS_ENDPOINTS) {
     try {
       const result = await requestOverpass(endpoint, query);
 
+      console.log("OVERPASS RESULT COUNT:", result.elements?.length);
+
       const seen = new Set();
+
+      console.log("OVERPASS QUERY:", query);
 
       return result.elements
         .map((element) => {

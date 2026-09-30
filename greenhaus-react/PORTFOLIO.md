@@ -52,6 +52,33 @@ jsx
   userLocation={userLocation}
 />
 
+### Current Development — Radar Natural-Language Search
+
+Feature 2 is currently in progress.
+
+Radar now parses natural-language queries into structured intent, including:
+
+- category
+- location
+- search term
+- preferences such as quiet, peaceful, relaxed and chill
+
+Conversational filler is stripped from searches so queries such as "find a peaceful restaurant" are interpreted as structured intent rather than literal keyword searches.
+
+External Radar search is currently being refined to translate that intent into efficient and semantically appropriate OpenStreetMap/Overpass queries. Food-specific searches such as "pizza in Sandton" are being investigated so Radar can search relevant cuisine data rather than relying solely on business names.
+
+Current known issue:
+
+- Some Overpass queries are still returning HTTP 504 timeouts.
+- External search/query construction is still under investigation.
+- Preference-based result relevance/ranking has not yet been implemented.
+
+Next investigation:
+
+- Review Explore.jsx and geocoding.js alongside radar.js and externalPlaces.jsx.
+- Verify the complete natural-language → intent → geocoding → Overpass → Radar-results pipeline.
+- Optimize external queries without sacrificing search relevance.
+
 ## Tech stack
 
 | Layer        | Tools                         |
