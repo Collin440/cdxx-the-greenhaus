@@ -54,30 +54,32 @@ jsx
 
 ### Current Development — Radar Natural-Language Search
 
-Feature 2 is currently in progress.
+**Feature 2 is now working end-to-end.**
 
-Radar now parses natural-language queries into structured intent, including:
+Radar can interpret natural-language discovery queries and convert them into structured search intent before querying GreenHaus and external place data.
 
-- category
-- location
-- search term
-- preferences such as quiet, peaceful, relaxed and chill
+Current capabilities include:
 
-Conversational filler is stripped from searches so queries such as "find a peaceful restaurant" are interpreted as structured intent rather than literal keyword searches.
+- Natural-language category detection for Music, Gallery, Dispensary, Restaurant and Park
+- Category aliases such as coffee, cafes, dining, concerts, gigs, art and cannabis
+- Location extraction from queries using phrases such as "in", "near" and "around"
+- Near-me handling using the user's current location rather than attempting to geocode phrases such as "me" or "my location"
+- Search-term extraction with conversational filler removed
+- Preference detection for terms such as quiet, peaceful, relaxed and chill
+- Category-only searches such as "restaurants"
+- External food discovery across restaurants, cafes and fast-food locations
+- OpenStreetMap / Overpass integration for external place discovery
+- Multiple Overpass endpoints with retry handling for temporary 429 and 504 failures
+- Request timeout protection for external map queries
+- Distance calculation and nearest-first ordering of external results
+- User-location fallback when a search does not contain a specific location
+- User-facing feedback for failed external searches and empty Radar results
 
-External Radar search is currently being refined to translate that intent into efficient and semantically appropriate OpenStreetMap/Overpass queries. Food-specific searches such as "pizza in Sandton" are being investigated so Radar can search relevant cuisine data rather than relying solely on business names.
+The current Radar pipeline is:
 
-Current known issue:
+**natural-language query → structured intent → location resolution → GreenHaus + external search → distance sorting → Radar results**
 
-- Some Overpass queries are still returning HTTP 504 timeouts.
-- External search/query construction is still under investigation.
-- Preference-based result relevance/ranking has not yet been implemented.
-
-Next investigation:
-
-- Review Explore.jsx and geocoding.js alongside radar.js and externalPlaces.jsx.
-- Verify the complete natural-language → intent → geocoding → Overpass → Radar-results pipeline.
-- Optimize external queries without sacrificing search relevance.
+Preference detection is currently used during intent parsing but **preference-based relevance ranking has not yet been implemented**. This is the next stage of Radar refinement.
 
 ## Tech stack
 
@@ -92,7 +94,7 @@ Next investigation:
 
 ## Why this project
 
-GreenHaus is built to demonstrate the full stack in one place: schema design, auth flows, real-time systems, file storage, and a UI that doesn't look like a template. With Radar now live, the next milestone is layering natural-language search on top of it.
+GreenHaus is built to demonstrate the full stack in one place: schema design, auth flows, real-time systems, file storage, external API integration, and a UI that doesn't look like a template. Radar now combines community venues with external place discovery and natural-language search, giving the project a more realistic discovery workflow rather than a simple database search.
 
 ## Recent activity
 

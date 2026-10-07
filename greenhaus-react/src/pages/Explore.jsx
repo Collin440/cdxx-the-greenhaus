@@ -46,6 +46,8 @@ function Explore() {
 
   const [radarResults, setRadarResults] = useState([]);
 
+  const [radarMessage, setRadarMessage] = useState("");
+
   const [venueName, setVenueName] = useState("");
   const [venueLocation, setVenueLocation] = useState("");
   const [venueLat, setVenueLat] = useState("");
@@ -181,6 +183,7 @@ function Explore() {
   });
 
   async function handleRadarSearch() {
+    setRadarMessage("");
     const intent = parseRadarIntent(searchTerm);
 
     console.log("RADAR INTENT:", intent);
@@ -192,11 +195,18 @@ function Explore() {
     });
 
     const externalPromise =
-      intent.searchTerm || intent.location
+      intent.searchTerm || intent.location || intent.category
         ? searchExternalPlaces({
             category: intent.category,
             location: intent.location,
             searchTerm: intent.searchTerm,
+            userLocation,
+          }).catch((error) => {
+            console.error("RADAR EXTERNAL SEARCH FAILED:", error);
+            setRadarMessage(
+              "Couldn't reach the map service. Please try again in a moment.",
+            );
+            return [];
           })
         : Promise.resolve([]);
 
@@ -217,6 +227,13 @@ function Explore() {
     ];
 
     setRadarResults(combinedResults);
+
+    if (combinedResults.length === 0) {
+      setRadarMessage(
+        (current) =>
+          current || "No places found nearby. Try a different search.",
+      );
+    }
   }
 
   return (
@@ -247,6 +264,10 @@ function Explore() {
       {radarResults.length > 0 && (
         <div className="radar-results">
           <h3>Radar Results</h3>
+
+          {radarMessage && (
+            <p className="radar-result-location">{radarMessage}</p>
+          )}
 
           {radarResults.map((venue) => (
             <article

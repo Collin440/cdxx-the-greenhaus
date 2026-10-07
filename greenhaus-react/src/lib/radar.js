@@ -1,11 +1,3 @@
-const RADAR_CATEGORIES = [
-  "Music",
-  "Gallery",
-  "Dispensary",
-  "Restaurant",
-  "Park",
-];
-
 const CATEGORY_ALIASES = {
   music: "Music",
   musician: "Music",
@@ -38,6 +30,9 @@ const CATEGORY_ALIASES = {
 };
 
 const RADAR_PREFERENCES = ["quiet", "peaceful", "relaxed", "chill"];
+const NEAR_ME_PHRASES = ["me", "my location", "my area", "here"];
+
+const hasWord = (text, word) => new RegExp(`\\b${word}\\b`, "i").test(text);
 
 export function parseRadarIntent(query) {
   const normalizedQuery = query.trim().toLowerCase();
@@ -55,14 +50,14 @@ export function parseRadarIntent(query) {
   let preferences = [];
 
   for (const [alias, mappedCategory] of Object.entries(CATEGORY_ALIASES)) {
-    if (normalizedQuery.includes(alias)) {
+    if (hasWord(normalizedQuery, alias)) {
       category = mappedCategory;
       break;
     }
   }
 
   for (const preference of RADAR_PREFERENCES) {
-    if (normalizedQuery.includes(preference)) {
+    if (hasWord(normalizedQuery, preference)) {
       preferences.push(preference);
     }
   }
@@ -72,7 +67,11 @@ export function parseRadarIntent(query) {
   const locationMatch = normalizedQuery.match(/\b(?:in|near|around)\s+(.+)$/i);
 
   if (locationMatch) {
-    location = locationMatch[1].trim();
+    const capturedLocation = locationMatch[1].trim();
+
+    location = NEAR_ME_PHRASES.includes(capturedLocation)
+      ? null
+      : capturedLocation;
   }
 
   let searchTerm = query.trim();
