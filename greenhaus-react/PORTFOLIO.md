@@ -100,6 +100,7 @@ GreenHaus is built to demonstrate the full stack in one place: schema design, au
 
 | Date         | Commit                                                                 | Hash      |
 | ------------ | ---------------------------------------------------------------------- | --------- |
+| Oct 8, 2026  | feat: complete Radar natural-language search                           | `455ddba` |
 | Sep 27, 2026 | Add project portfolio                                                  | `6093629` |
 | Sep 27, 2026 | Add radar place map selection                                          | `b5c7c18` |
 | Sep 25, 2026 | feat: build Radar results list on Explore page                         | `945511c` |
