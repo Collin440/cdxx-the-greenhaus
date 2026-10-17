@@ -43,7 +43,7 @@ Radar surfaces nearby venues by blending what's already on GreenHaus with live e
 - A **venue detail modal** for anything selected, on- or off-platform (`selectedVenue` / `selectedRadarPlace`)
 - **Location-aware results**, centered on the user (`userLocation`)
 
-jsx
+```jsx
 <ExploreMap
   venues={filteredVenues}
   radarResults={radarResults}
@@ -51,6 +51,7 @@ jsx
   selectedRadarPlace={selectedRadarPlace}
   userLocation={userLocation}
 />
+```
 
 ### Current Development — Radar Natural-Language Search
 
@@ -100,6 +101,7 @@ GreenHaus is built to demonstrate the full stack in one place: schema design, au
 
 | Date         | Commit                                                                 | Hash      |
 | ------------ | ---------------------------------------------------------------------- | --------- |
+| Oct 17, 2026 | feat: add preference-based ranking to Radar results                    | `4b7d401` |
 | Oct 8, 2026  | feat: complete Radar natural-language search                           | `455ddba` |
 | Sep 27, 2026 | Add project portfolio                                                  | `6093629` |
 | Sep 27, 2026 | Add radar place map selection                                          | `b5c7c18` |
@@ -118,11 +120,3 @@ GreenHaus is built to demonstrate the full stack in one place: schema design, au
 | Aug 18, 2026 | feat(messages): implement realtime messaging and conversation features | `0e0042e` |
 
 _Full history: [github.com/Collin440/cdxx-the-greenhaus/commits/main](https://github.com/Collin440/cdxx-the-greenhaus/commits/main)_
-
-```
-
-```
-
-```
-
-```
