@@ -27,6 +27,8 @@ import { parseRadarIntent } from "../lib/radar";
 
 import { searchExternalPlaces } from "../lib/externalPlaces";
 
+import { rankByPreferences } from "../lib/radarRanking";
+
 function Explore() {
   const [selectedCategory, setSelectedCategory] = useState("All");
 
@@ -226,7 +228,12 @@ function Explore() {
       ...externalResults,
     ];
 
-    setRadarResults(combinedResults);
+    const rankedResults = rankByPreferences(
+      combinedResults,
+      intent.preferences,
+    );
+
+    setRadarResults(rankedResults);
 
     if (combinedResults.length === 0) {
       setRadarMessage(

@@ -89,6 +89,8 @@ function mapExternalPlace(element, category, fallbackLocation = null) {
     latitude,
     longitude,
     description: tags.description || "",
+    placeType:
+      tags.amenity || tags.leisure || tags.tourism || tags.shop || null,
     source: "OpenStreetMap",
     sourceUrl: `https://www.openstreetmap.org/${element.type}/${element.id}`,
   };
