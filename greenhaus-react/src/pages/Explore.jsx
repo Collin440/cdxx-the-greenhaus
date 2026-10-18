@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import {
   Plus,
   MapPin,
-  Image,
   Building2,
   Compass,
   Music4,
@@ -37,8 +36,6 @@ function Explore() {
   const [selectedRadarPlace, setSelectedRadarPlace] = useState(null);
 
   const [venueModalOpen, setVenueModalOpen] = useState(false);
-
-  const [showAddVenueModal, setShowAddVenueModal] = useState(false);
 
   const [venues, setVenues] = useState([]);
 
