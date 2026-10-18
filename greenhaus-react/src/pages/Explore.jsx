@@ -22,7 +22,7 @@ import {
   deleteVenue,
 } from "../lib/venues";
 
-import { parseRadarIntent } from "../lib/radar";
+import { parseRadarIntentSmart } from "../lib/aiIntent";
 
 import { searchExternalPlaces } from "../lib/externalPlaces";
 
@@ -183,7 +183,7 @@ function Explore() {
 
   async function handleRadarSearch() {
     setRadarMessage("");
-    const intent = parseRadarIntent(searchTerm);
+    const intent = await parseRadarIntentSmart(searchTerm);
 
     console.log("RADAR INTENT:", intent);
 
