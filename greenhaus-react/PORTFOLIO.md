@@ -78,20 +78,29 @@ Current capabilities include:
 
 The current Radar pipeline is:
 
-**natural-language query → structured intent → location resolution → GreenHaus + external search → distance sorting → Radar results**
+**natural-language query → AI-assisted structured intent (regex fallback) → location resolution → GreenHaus + external search → distance sorting → preference ranking → Radar results**
 
-Preference detection is currently used during intent parsing but **preference-based relevance ranking has not yet been implemented**. This is the next stage of Radar refinement.
+### AI-assisted intent parsing
+
+Radar's keyword parser handles clear queries like "quiet cafe near me". For vaguer phrasing it hands the query to a language model that returns the same structured intent (category, location, search term, preferences), so a query such as "a calm place to read" can still be understood.
+
+- Runs server-side in a **Supabase Edge Function**; the API key is stored as a server secret and never reaches the browser
+- Only signed-in GreenHaus users can call it
+- The model's reply is **validated** against GreenHaus's fixed categories and preference list before anything downstream sees it
+- The keyword parser runs first, so clear queries never use the AI; if the AI call fails or times out, Radar falls back to the keyword parser
+- Built on a free-tier model API for this portfolio build
 
 ## Tech stack
 
-| Layer        | Tools                         |
-| ------------ | ----------------------------- |
-| Frontend     | React                         |
-| Backend / DB | Supabase                      |
-| Auth         | Supabase Auth                 |
-| Storage      | Supabase Storage              |
-| Realtime     | Supabase Realtime (messaging) |
-| Maps         | Google Maps API               |
+| Layer        | Tools                                |
+| ------------ | ------------------------------------ |
+| Frontend     | React                                |
+| Backend / DB | Supabase                             |
+| Auth         | Supabase Auth                        |
+| Storage      | Supabase Storage                     |
+| Realtime     | Supabase Realtime (messaging)        |
+| Maps         | Google Maps API                      |
+| AI           | Supabase Edge Functions + Gemini API |
 
 ## Why this project
 
@@ -101,6 +110,7 @@ GreenHaus is built to demonstrate the full stack in one place: schema design, au
 
 | Date         | Commit                                                                 | Hash      |
 | ------------ | ---------------------------------------------------------------------- | --------- |
+| Oct 18, 2026 | feat: add AI-assisted intent parsing for Radar                         | `4fecba3` |
 | Oct 17, 2026 | feat: add preference-based ranking to Radar results                    | `4b7d401` |
 | Oct 8, 2026  | feat: complete Radar natural-language search                           | `455ddba` |
 | Sep 27, 2026 | Add project portfolio                                                  | `6093629` |
