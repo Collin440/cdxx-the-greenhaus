@@ -1,6 +1,8 @@
 import { geocodeLocation } from "./geocoding";
 
 const OVERPASS_ENDPOINTS = [
+  "https://overpass.private.coffee/api/interpreter",
+  "https://overpass.kumi.systems/api/interpreter",
   "https://overpass-api.de/api/interpreter",
   "https://lz4.overpass-api.de/api/interpreter",
 ];
@@ -142,7 +144,14 @@ async function requestOverpass(endpoint, query) {
       throw error;
     }
 
-    return await response.json();
+    const data = await response.json();
+
+    // Overpass can answer "200 OK" and still report a failure in "remark".
+    if (data.remark && /error|timeout/i.test(data.remark)) {
+      throw new Error(`Overpass runtime error: ${data.remark.slice(0, 200)}`);
+    }
+
+    return data;
   } finally {
     clearTimeout(timer);
   }
