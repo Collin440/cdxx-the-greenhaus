@@ -1,7 +1,8 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
 
 // Confirm this model ID in Google AI Studio's model list; the free tier covers Flash / Flash-Lite models.
-const MODEL = "gemini-3.8-flash";
+// Tried in order; the second is a lighter model used when the first is busy.
+const MODELS = ["gemini-3.5-flash-lite", "gemini-3.8-flash"];
 
 const CATEGORIES = ["Music", "Gallery", "Dispensary", "Restaurant", "Park"];
 const PREFERENCES = ["quiet", "peaceful", "relaxed", "chill"];
@@ -14,7 +15,7 @@ const corsHeaders = {
 
 const SYSTEM_PROMPT = `You convert a place-discovery search into JSON.
 Return ONLY a JSON object with exactly these keys: category, location, searchTerm, preferences.
-- category: one of Music, Gallery, Dispensary, Restaurant, Park, or null. Use Restaurant for food, cafes, coffee and dining; Music for live music, concerts, gigs and clubs; Gallery for art, exhibitions and museums; Dispensary for cannabis shops; Park for parks, gardens and outdoor walks.
+- category: one of Music, Gallery, Dispensary, Restaurant, Park, or null. Use Restaurant for food, cafes, coffee and dining; Music for live music, concerts, gigs and clubs; Gallery for art, exhibitions and museums; Dispensary for cannabis shops; Park for parks, gardens and outdoor walks. If the user describes an activity or situation without naming a place type, choose the single most likely category: reading, studying, working or meeting someone suggests Restaurant (cafes); walking, fresh air, picnics or kids playing suggests Park; art or culture suggests Gallery; dancing or a night out suggests Music. Use null only when nothing fits.
 - location: a named place such as a suburb or city mentioned in the text, or null. Use null for "near me", "nearby", "around here", or when no place is named.
 - searchTerm: a specific thing the user wants (for example pizza, sushi, jazz), or null. Do not repeat the category word or mood words.
 - preferences: any of quiet, peaceful, relaxed, chill that the text implies (a calm place to read implies quiet and relaxed), otherwise an empty array.
@@ -92,35 +93,64 @@ Deno.serve(async (req) => {
   if (!apiKey) return json({ error: "AI not configured" }, 500);
 
   try {
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-goog-api-key": apiKey,
-        },
-        body: JSON.stringify({
-          systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
-          contents: [{ role: "user", parts: [{ text: query }] }],
-          generationConfig: {
-            temperature: 0,
-            responseMimeType: "application/json",
-          },
-        }),
-        signal: AbortSignal.timeout(8000),
-      },
-    );
+    let lastStatus = 0;
 
-    if (!response.ok) {
-      console.error("Gemini error", response.status, await response.text());
-      return json({ error: `AI request failed (${response.status})` }, 502);
+    for (const model of MODELS) {
+      try {
+        const response = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "x-goog-api-key": apiKey,
+            },
+            body: JSON.stringify({
+              systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
+              contents: [{ role: "user", parts: [{ text: query }] }],
+              generationConfig: {
+                temperature: 0,
+                responseMimeType: "application/json",
+                thinkingConfig: { thinkingLevel: "low" },
+              },
+            }),
+            signal: AbortSignal.timeout(6000),
+          },
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          const text = data?.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
+          return json({ intent: cleanIntent(JSON.parse(text)) });
+        }
+
+        lastStatus = response.status;
+        console.error(
+          "Gemini error",
+          model,
+          response.status,
+          await response.text(),
+        );
+
+        // Busy, rate-limited or unknown model: try the next one.
+        // Anything else is a real problem, so stop.
+        if (![404, 429, 500, 503].includes(response.status)) break;
+      } catch (err) {
+        // A timeout or unreadable reply: log it and try the next model.
+        console.error("Gemini call threw", model, String(err));
+      }
     }
 
-    const data = await response.json();
-    const text = data?.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
-    return json({ intent: cleanIntent(JSON.parse(text)) });
-  } catch {
+    return json(
+      {
+        error: lastStatus
+          ? `AI request failed (${lastStatus})`
+          : "AI request failed",
+      },
+      502,
+    );
+  } catch (err) {
+    console.error("AI request failed", err);
     return json({ error: "AI request failed" }, 502);
   }
 });
